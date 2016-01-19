@@ -7,217 +7,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1c557456-5202-4a24-aef0-f5150b20bd69" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/assets/VkBace" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/assets/android.jpg" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties.lock" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties.lock" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileHashes.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileHashes.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/fileSnapshots.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/fileSnapshots.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/intermediates/gradle_project_sync_data.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-hdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-mdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-ru-hdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-ru-xhdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-ru-xxhdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-xhdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-xxhdpi/ic_ab_app.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-hdpi/ic_ab_done.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-mdpi/ic_ab_done.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-xhdpi/ic_ab_done.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable-xxhdpi/ic_ab_done.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/ic_launcher-web.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/drawable-hdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/drawable-mdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/drawable-xhdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/drawable-xxhdpi/ic_launcher.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/keystore.jks" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/outputFileStates.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/outputFileStates.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/taskArtifacts.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/taskArtifacts.bin" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/AndroidManifest.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/AndroidManifest.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/Application.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRec.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRecWrapper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/CurVkClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DBHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DownloadFileFromURL.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/IDatabaseHandler.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/Identifiable.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/LICENSE" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/LoginActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/ParseUtils.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/RecommendAudio.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKAbstractOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKAccessToken.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKAccessTokenTracker.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKApi.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiApplicationContent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiAudio.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiAudio.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiBase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiCaptcha.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiChat.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiCity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiComment.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiCommunity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiCommunityArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiCommunityFull.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKApiConst.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiCountry.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiDialog.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiDocs.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiDocument.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiFriends.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiGetDialogResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiGetMessagesResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiGroups.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiLink.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiMessage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiMessages.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiModel.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiNote.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiOwner.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPhoto.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPhotoAlbum.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPhotoSize.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiPhotos.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPlace.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPoll.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPost.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiPostedPhoto.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiSchool.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiUniversity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiUser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiUserFull.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiUsers.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiVideo.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/methods/VKApiWall.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKApiWikiPage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKAttachments.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKBatchRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKCallback.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/dialogs/VKCaptchaDialog.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKCommentArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKDefaultParser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKDocsArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKError.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKHttpClient.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKHttpOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/payments/VKIInAppBillingService.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKImageOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKImageParameters.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/util/VKJsonHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKJsonOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKList.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKModelOperation.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/httpClient/VKMultipartEntity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKObject.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/dialogs/VKOpenAuthDialog.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKParameters.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKParser.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/payments/VKPaymentsCallback.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/payments/VKPaymentsDatabase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/payments/VKPaymentsReceiver.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/payments/VKPaymentsServerSender.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKPhotoArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKPhotoSizes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKPostArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKPrivacy.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKResponse.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKScope.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKScopes.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKSdk.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKSdkVersion.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKServiceActivity.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/dialogs/VKShareDialog.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/util/VKStringJoiner.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKSyncRequestUtil.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/VKTestApplication.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/VKUIHelper.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKUploadAlbumPhotoRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/VKUploadBase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/docs/VKUploadDocBase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/docs/VKUploadDocRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKUploadImage.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKUploadMessagesPhotoRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKUploadPhotoBase.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/docs/VKUploadWallDocRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/photo/VKUploadWallPhotoRequest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKUsersArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/util/VKUtil.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VKWallPostResult.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/VkAudioArray.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VkProj.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/WebView.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/activity_api_call.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/activity_recommend_audio.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/activity_start.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.2.1/taskArtifacts/cache.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values/color.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values/dimen.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values-w600dp/dimen.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values-w720dp/dimen.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values/dimens.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values-w820dp/dimens.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/fragment_api_call.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/fragment_login.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/fragment_logout.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/layout/fragment_test.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradlew.bat" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/gradlew" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/lint.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/local.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/.settings/org.eclipse.jdt.core.prefs" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/java/com/vk/sdk/api/model/package-info.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/project.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/runConfigurations.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values/strings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values/strings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values-ru/strings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values/strings_activity_login.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values/styles.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/res/values-large/styles.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values/styles.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values-v11/styles.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/values-v21/styles.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vk-android-sdk-master.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vkAudio.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/layout/vk_captcha_dialog.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable/vk_clear_shape.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable/vk_gray_transparent_shape.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/layout/vk_open_auth_dialog.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/layout/vk_share_dialog.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/layout-v17/vk_share_dialog.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/src/main/res/drawable/vk_share_send_button_background.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/vksdk_library/vksdk_library.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRec.java" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRec.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRecWrapper.java" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/AudioRecWrapper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DBHelper.java" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DBHelper.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DownloadFileFromURL.java" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/DownloadFileFromURL.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/IDatabaseHandler.java" afterPath="$PROJECT_DIR$/VKTestApplication/src/main/java/com/vk/vktestapp/IDatabaseHandler.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_22_2_1.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties" afterPath="$PROJECT_DIR$/.gradle/2.8/taskArtifacts/cache.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_23_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_23_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_23_0_0.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="vkAudio.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -249,6 +51,7 @@
         <option value="Alexey" />
       </list>
     </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
     <option name="availableProjects">
@@ -2636,6 +2439,13 @@
       <option name="number" value="Default" />
       <updated>1453188775376</updated>
     </task>
+    <task id="LOCAL-00001" summary="First Commit">
+      <created>1453189842993</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1453189842993</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
