@@ -25,6 +25,7 @@ public class AudioRec implements Serializable{
     private String type; // рекомендованные, мои аудиозаписи или пустая аудиозапись
     private String savePath;
 
+    //тестовая запись
     AudioRec(int id, int audio_id,int owner_id, String artist,String title,int duration,String url,int genre_id,int isLoaded,String type,String savePath){
         this.id = id;
         this.audio_id = audio_id;
