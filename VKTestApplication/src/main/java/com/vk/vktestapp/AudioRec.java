@@ -1,18 +1,33 @@
 package com.vk.vktestapp;
 
 import android.content.ContentValues;
+import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Set;
 
 /**
  * Created by Морковушка on 17.01.2016.
  */
 public class AudioRec implements Serializable{
 
+    public static final String saveFolder = "/storage/emulated/0/VkMusic/SingleLoad/";
+    public static final int DONT_LOAD = 0;
+    public static final int MUST_LOAD = 1;
+    public static final int IS_LOAD = 2;
+
     public static final int columnSize = 11;
-
     private static final long serialVersionUID = 1L;
-
     private int id;
     private int audio_id;       // id аудиозаписи
     private int owner_id; // id владельца
@@ -24,6 +39,99 @@ public class AudioRec implements Serializable{
     private int isLoaded; // загружена аудиозапись на устройство или нет
     private String type; // рекомендованные, мои аудиозаписи или пустая аудиозапись
     private String savePath;
+
+
+    class AudioDownloader extends AsyncTask<Void, Integer, Integer> {
+        ProgressBar bar;
+        TextView text;
+        AudioDownloader(ProgressBar bar,TextView text){
+            this.bar = bar;
+            this.text = text;
+        }
+        // сам фоновый процесс
+        @Override
+        protected Integer doInBackground(Void... params) {
+            loadFile( saveFolder+artist + "-" + title + ".mp3", url);
+            return null;
+        }
+
+        // инициализация процесса
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // задаём текст полю
+            text.setText("Идёт загрузка..");
+            // делаем поле видимым
+            text.setVisibility(View.VISIBLE);
+            // делаем ProcessBar видимым
+            bar.setVisibility(View.VISIBLE);
+            // задаём максимум ProcessBar'у
+            bar.setMax(100);
+            bar.setProgress(0);
+        }
+
+        // метод для загрузки файлов
+        public void loadFile(String path, String urlPath) {
+            try {
+                // создаём url-адрес
+                URL url = new URL(urlPath);
+                // создаём url-соединение
+                URLConnection conection = url.openConnection();
+                // подключаемся
+                conection.connect();
+                // размер файла
+                int len = conection.getContentLength();
+                // создаём поток чтения
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+                // создаём поток вывода
+                OutputStream output = new FileOutputStream(path);
+                // создаём буфер для чтения
+                byte data[] = new byte[1024];
+                // переменная для чтения из потока
+                int count;
+                // переменная для подсчёта процента скаченности файла
+                int total = 0;
+                // пока есть, что читать, читаем
+                while ((count = input.read(data)) != -1) {
+                    if (!url.equals("")) {
+                        total += count;
+                        if (len != 0) {
+                            publishProgress((int) (total * 100 / len));
+                        } else {
+                            Log.e("DOWNLOAD", "размер файла 0");
+                        }
+                    }
+                    output.write(data, 0, count);
+                }
+                // заполняем поток
+                output.flush();
+                // закрываем потоки
+                output.close();
+                input.close();
+                // ловим ошибки
+            } catch (Exception e) {
+                Log.e("Error: ", e.getMessage());
+            }
+        }
+
+        // здесь надо обрабатывать все команды для UI
+        protected void onProgressUpdate(Integer... progress) {
+            bar.setProgress(progress[0]);
+            text.setText("Идёт загрузка: "+progress[0]+"%");
+        }
+
+        @Override
+        // что нужно сделать в конце процесса
+        protected void onPostExecute(Integer param) {
+            savePath = saveFolder+artist + "-" + title + ".mp3";
+            isLoaded = IS_LOAD;
+            // скрываем progressBar
+            bar.setVisibility(View.INVISIBLE);
+            // скрываем текст
+            text.setVisibility(View.INVISIBLE);
+        }
+
+    }
 
     //тестовая запись
     AudioRec(int id, int audio_id,int owner_id, String artist,String title,int duration,String url,int genre_id,int isLoaded,String type,String savePath){
@@ -48,6 +156,9 @@ public class AudioRec implements Serializable{
     public int getID(){return id;}
     public void setType(String type){ this.type = type;}
     public String getUrl(){ return url;}
+    public int getAudioId(){return audio_id;}
+    public int getIsLoaded(){return isLoaded;}
+    public String getType(){return type;}
     public ContentValues getDBValues(){
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_AUDIO_ID, audio_id);
@@ -77,5 +188,8 @@ public class AudioRec implements Serializable{
         arr[10] = savePath;
         return arr;
     }
-
+    int load(ProgressBar bar,TextView text){
+        new AudioDownloader(bar,text).execute();
+        return audio_id;
+    }
 }

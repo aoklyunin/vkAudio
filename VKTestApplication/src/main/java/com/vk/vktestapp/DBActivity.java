@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-public class RecommendAudio extends AppCompatActivity {
+public class DBActivity extends AppCompatActivity {
     ArrayList<AudioRec> audioArr;
 
     String getUrlByTitle(String title){

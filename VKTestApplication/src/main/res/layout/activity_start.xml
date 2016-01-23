@@ -67,26 +67,34 @@
         >
 
         <Button
-            android:onClick="btnLoadAudio"
+            android:onClick="btnAudioInDB"
             android:id= "@+id/load_button_audio"
-            android:text = "Загрузить музыку"
+            android:text = "Аудио в БД"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
         <Button
             android:onClick="btnLoadFile"
             android:id= "@+id/load_button_file"
-            android:text = "Загрузить"
+            android:text = "Аудиозаписи"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
         <Button
             android:onClick="btnRecommend"
             android:id= "@+id/recommend_button"
-            android:text = "Рекомендуемые"
+            android:text = "Отобразить ДБ"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
+
+        <Button
+            android:onClick="btnDeleteDB"
+            android:id= "@+id/delete_bd"
+            android:text = "Удалить БД"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_column="3" />
 
     </TableRow>
 
@@ -94,9 +102,9 @@
               android:layout_height="wrap_content"
               android:padding="2dp">
         <Button
-            android:onClick="btnCreateDB"
+            android:onClick="btnLoadAudio"
             android:id= "@+id/create_db"
-            android:text = "Создать БД"
+            android:text = "Загрузить аудио"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
@@ -111,13 +119,6 @@
             android:onClick="btnDisplayDB"
             android:id= "@+id/display_bd"
             android:text = "Вывод БД"
-            android:layout_width="70dp"
-            android:layout_height="match_parent"
-            />
-        <Button
-            android:onClick="btnDeleteDB"
-            android:id= "@+id/delete_bd"
-            android:text = "Удалить БД"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />

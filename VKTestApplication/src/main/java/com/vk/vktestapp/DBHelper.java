@@ -3,14 +3,18 @@ package com.vk.vktestapp;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
+public class DBHelper extends SQLiteOpenHelper {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "VK";
@@ -54,15 +58,42 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
         onCreate(db);
     }
 
-    @Override
     public void addAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = audio.getDBValues();
-        db.insert(TABLE_CONTACTS, null, values);
+        // проверяем, нет ли уже записи с таким же audio_id
+        try {
+            String count = "SELECT count(*) FROM "+ TABLE_CONTACTS + " WHERE " + KEY_AUDIO_ID+"="+String.valueOf(audio.getAudioId());
+            Cursor mcursor = db.rawQuery(count, null);
+            mcursor.moveToFirst();
+            int icount = mcursor.getInt(0);
+            if (icount != 0) {
+                Log.d("SQL DB", "Найдено " + icount + " записей с заданным audio_id");
+            } else {
+                Log.d("SQL DB", "Записей с заданным кол-во audio_id не найдено");
+                // получаем значения из
+                ContentValues values = audio.getDBValues();
+                db.insert(TABLE_CONTACTS, null, values);
+            }
+        }catch (SQLException e){
+            Log.e("SQL DB",e.getMessage());
+        }
         db.close();
     }
 
-    @Override
+    // меняем значение isLoad на противоположное (нужно загружать/не нужно)
+    public void inverseIsLoaded(String id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+                KEY_IS_LOADED + " = (" + KEY_IS_LOADED + "+1) % 2 WHERE id = "+id;
+        Log.d("SQL DB",execStr);
+        try {
+            db.execSQL(execStr);
+        }catch (SQLException e){
+            Log.d("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
+
     public AudioRec getAudioRec(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CONTACTS, new String[] {
@@ -88,7 +119,6 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
         return audio;
     }
 
-    @Override
     public List<AudioRec> getAllAudioRecs() {
         List<AudioRec> audioList = new ArrayList<AudioRec>();
         String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
@@ -98,8 +128,6 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
 
         if (cursor.moveToFirst()) {
             do {
-                for( String s : cursor.getColumnNames())
-                    Log.d("COLUMN CNT",s);
                 AudioRec audio =  new AudioRec(cursor.getInt(0),
                                                cursor.getInt(1) ,
                                                cursor.getInt(2),
@@ -114,10 +142,10 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
                 audioList.add(audio);
             } while (cursor.moveToNext());
         }
+        db.close();
         return audioList;
     }
 
-    @Override
     public int updateAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -129,21 +157,18 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
                 new String[] { String.valueOf(audio.getID()) });
     }
 
-    @Override
     public void deleteAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, KEY_ID + " = ?", new String[] { String.valueOf(audio.getID()) });
+        db.delete(TABLE_CONTACTS, KEY_ID + " = ?", new String[]{String.valueOf(audio.getID())});
         db.close();
     }
 
-    @Override
     public void deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CONTACTS, null, null);
         db.close();
     }
 
-    @Override
     public int getAudioRecCount() {
         String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -151,4 +176,64 @@ public class DBHelper extends SQLiteOpenHelper implements IDatabaseHandler {
         cursor.close();
         return cursor.getCount();
     }
+    public int getCountMustLoad(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String count = "SELECT count(*) FROM "+ TABLE_CONTACTS + " WHERE " + KEY_IS_LOADED+"="+AudioRec.MUST_LOAD;
+        Cursor mcursor = db.rawQuery(count, null);
+        mcursor.moveToFirst();
+        int cnt = mcursor.getInt(0);
+        db.close();
+        return cnt;
+    }
+    public AudioRec getAudio(){
+        String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
+                             " WHERE "+ KEY_IS_LOADED+"="+AudioRec.MUST_LOAD+
+                             " LIMIT 1";
+        SQLiteDatabase db = this.getWritableDatabase();
+        AudioRec audio = null;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            audio = new AudioRec(cursor.getInt(0),
+                                 cursor.getInt(1) ,
+                                 cursor.getInt(2),
+                                 cursor.getString(3),
+                                 cursor.getString(4),
+                                 cursor.getInt(5),
+                                 cursor.getString(6),
+                                 cursor.getInt(7),
+                                 cursor.getInt(8),
+                                 cursor.getString(9),
+                                 cursor.getString(10));
+        }else {
+            Log.e("SQL DB", "Не найдено ни одной записи на загрузку");
+        }
+        db.close();
+        return audio;
+    }
+    void setAudioIsLoaded(int audioId){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+                KEY_IS_LOADED + " = 2 WHERE "+ KEY_AUDIO_ID +" = "+audioId;
+        Log.d("SQL DB",execStr);
+        try {
+            db.execSQL(execStr);
+        }catch (SQLException e){
+            Log.d("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
+    public int loadFirstAudio(ProgressBar firstBar, TextView barText){
+        try {
+            AudioRec audio = getAudio();
+            int audioId = audio.load(firstBar,barText);
+            setAudioIsLoaded(audioId);
+            return audioId;
+        }catch (Exception e){
+            return -1;
+        }
+    }
+    public void loadAudioById(ProgressBar firstBar, TextView barText,int id){
+
+    }
+
 }

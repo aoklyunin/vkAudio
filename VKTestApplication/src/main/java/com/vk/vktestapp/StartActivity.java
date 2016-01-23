@@ -17,13 +17,12 @@ import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Activity which displays a login screen to the user, offering registration as
  * well.
  */
-public class LoginActivity extends FragmentActivity {
+public class StartActivity extends FragmentActivity {
     private TextView tv; // поле для дебага
     private ListView lv; // список аудиозаписей
     public ProgressBar firstBar; // ProcessBar
@@ -63,10 +62,13 @@ public class LoginActivity extends FragmentActivity {
     private void showMessage(String str){
         Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
+
     // кнопка загрузки аудио
-    public void btnLoadAudio(View view){
-        cVk.loadMyAudio(10, 0);
-        //cVk.displayAudio();
+    public void btnAudioInDB(View view){
+        DBHelper db = new DBHelper(this);
+        cVk.fillDB(db,10,10);
+        cVk.fillDB(db,10,10);
+        Toast.makeText(this,"Аудиозаписи загружены",Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onResume() {
@@ -88,7 +90,6 @@ public class LoginActivity extends FragmentActivity {
         VKCallback<VKAccessToken> callback = new VKCallback<VKAccessToken>() {
             @Override
             public void onResult(VKAccessToken res) {
-                // User passed Authorization
                 showMessage("авторизация прошла успешно");
             }
             @Override
@@ -102,7 +103,11 @@ public class LoginActivity extends FragmentActivity {
         }
     }
     public void btnLoadFile(View view){
-        new DownloadFileFromURL("/storage/emulated/0/VkMusic/MyAudio/",firstBar,barText, "").execute();
+        Intent intent = new Intent(StartActivity.this, AudioActivity.class);
+        //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
+        //intent.putExtra("obj",wrapper );
+        startActivity(intent);
+
     }
     public void btnRecommend(View view){
         // Start lengthy operation in a background thread
@@ -116,9 +121,9 @@ public class LoginActivity extends FragmentActivity {
                         e.printStackTrace();
                     }
                 }
-                LoginActivity.this.runOnUiThread(new Runnable() {
+                StartActivity.this.runOnUiThread(new Runnable() {
                     public void run() {
-                        Intent intent = new Intent(LoginActivity.this, RecommendAudio.class);
+                        Intent intent = new Intent(StartActivity.this, DBActivity.class);
                         //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
                         //intent.putExtra("obj",wrapper );
                         startActivity(intent);
@@ -128,14 +133,11 @@ public class LoginActivity extends FragmentActivity {
         }).start();
     }
 
-    public void btnCreateDB(View view){
+    public void btnLoadAudio(View view){
     }
 
     public void btnFillDB(View view){
-        // создаём базу аудиозаписей
-        DBHelper db = new DBHelper(this);
-        cVk.fillDB(db,100,100);
-        Toast.makeText(this,"Данные загружены",Toast.LENGTH_SHORT).show();
+
     }
     public void btnDisplayDB(View view){
         Log.d("1", "Reading all contacts..");
@@ -149,5 +151,6 @@ public class LoginActivity extends FragmentActivity {
     public void btnDeleteDB(View view){
         DBHelper db = new DBHelper(this);
         db.deleteAll();
+        Toast.makeText(this,"Аудиозаписи удалены",Toast.LENGTH_SHORT).show();
     }
 }
