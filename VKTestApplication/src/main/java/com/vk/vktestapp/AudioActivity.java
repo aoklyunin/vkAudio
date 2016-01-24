@@ -1,8 +1,10 @@
 package com.vk.vktestapp;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,9 +24,35 @@ import org.w3c.dom.Text;
 
 import java.util.List;
 
-public class AudioActivity extends AppCompatActivity {
+public class AudioActivity extends Activity implements View.OnClickListener {
     DBHelper db;
 
+    private int getId(){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            //return Utils.generateViewId();
+            return -1;
+        } else {
+            return View.generateViewId();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null) {return;}
+        boolean flg = data.getBooleanExtra("BOOL",false);
+        if (flg){
+            int id = data.getIntExtra("ID",0);
+            TableRow tr = (TableRow) findViewById(id);
+            Button bt = (Button) tr.getChildAt(4);
+            DBHelper db = new DBHelper(this);
+           // db.loadAudioByTablleRowId(id);
+            db.loadFirstAudio((ProgressBar)findViewById(R.id.progress_bar_audio),
+                              (TextView)findViewById(R.id.audio_text));
+            bt.setText("Загружено");
+            bt.setTextColor(0xFF00FF00);
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +76,9 @@ public class AudioActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(getApplicationContext(), DialogActivity.class);
-                    startActivity(intent);
-
+                    TableRow tr = (TableRow) v.getParent();
+                    intent.putExtra("ID", tr.getId());
+                    startActivityForResult(intent,1);
                 }
             };
             TextView text = new TextView(this);
@@ -74,6 +103,9 @@ public class AudioActivity extends AppCompatActivity {
             text.setTextSize(25);
             text.setOnClickListener(lst);
             tableRow.addView(text, 3);
+            int id = getId();
+            tableRow.setId(id);
+            audio.setTableRowID(id);
             tableLayout.addView(tableRow, i++);
 
             Button btn = new Button(this);
@@ -133,4 +165,8 @@ public class AudioActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+
+    }
 }

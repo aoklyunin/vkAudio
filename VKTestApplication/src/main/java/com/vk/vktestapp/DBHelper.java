@@ -232,6 +232,18 @@ public class DBHelper extends SQLiteOpenHelper {
             return -1;
         }
     }
+    /*
+    public int loadAudioByTablleRowId(ProgressBar firstBar, TextView barText){
+        try {
+            AudioRec audio = getAudioByTableRowID();
+            int audioId = audio.load(firstBar,barText);
+            setAudioIsLoaded(audioId);
+            return audioId;
+        }catch (Exception e){
+            return -1;
+        }
+    }*/
+
     public void loadAudioById(ProgressBar firstBar, TextView barText,int id){
 
     }

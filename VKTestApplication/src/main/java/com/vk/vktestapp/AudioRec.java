@@ -39,7 +39,7 @@ public class AudioRec implements Serializable{
     private int isLoaded; // загружена аудиозапись на устройство или нет
     private String type; // рекомендованные, мои аудиозаписи или пустая аудиозапись
     private String savePath;
-
+    private int tableRowID;
 
     class AudioDownloader extends AsyncTask<Void, Integer, Integer> {
         ProgressBar bar;
@@ -159,6 +159,7 @@ public class AudioRec implements Serializable{
     public int getAudioId(){return audio_id;}
     public int getIsLoaded(){return isLoaded;}
     public String getType(){return type;}
+    public void setTableRowID(int tableRoID){this.tableRowID = tableRowID;}
     public ContentValues getDBValues(){
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_AUDIO_ID, audio_id);
