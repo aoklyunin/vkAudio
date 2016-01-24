@@ -45,9 +45,8 @@ public class AudioActivity extends Activity implements View.OnClickListener {
             TableRow tr = (TableRow) findViewById(id);
             Button bt = (Button) tr.getChildAt(4);
             DBHelper db = new DBHelper(this);
-           // db.loadAudioByTablleRowId(id);
-            db.loadFirstAudio((ProgressBar)findViewById(R.id.progress_bar_audio),
-                              (TextView)findViewById(R.id.audio_text));
+            db.loadAudioByTablleRowId((ProgressBar)findViewById(R.id.progress_bar_audio),
+                                      (TextView)findViewById(R.id.audio_text),id);
             bt.setText("Загружено");
             bt.setTextColor(0xFF00FF00);
 
@@ -78,6 +77,8 @@ public class AudioActivity extends Activity implements View.OnClickListener {
                     Intent intent=new Intent(getApplicationContext(), DialogActivity.class);
                     TableRow tr = (TableRow) v.getParent();
                     intent.putExtra("ID", tr.getId());
+                    AudioRec audio = db.getAudioByTableRowID(tr.getId());
+                    intent.putExtra("LABEL",audio.getArtist()+"-"+audio.getTitle());
                     startActivityForResult(intent,1);
                 }
             };
@@ -104,8 +105,8 @@ public class AudioActivity extends Activity implements View.OnClickListener {
             text.setOnClickListener(lst);
             tableRow.addView(text, 3);
             int id = getId();
+            db.setTableRowId(id,audio.getID());
             tableRow.setId(id);
-            audio.setTableRowID(id);
             tableLayout.addView(tableRow, i++);
 
             Button btn = new Button(this);
@@ -152,7 +153,16 @@ public class AudioActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
                     int id = db.loadFirstAudio((ProgressBar)findViewById(R.id.progress_bar_audio),
-                                                    (TextView)findViewById(R.id.audio_text));
+                                               (TextView)findViewById(R.id.audio_text));
+                    try {
+                        TableRow tr = (TableRow) findViewById(id);
+                        DBHelper db = new DBHelper(AudioActivity.this);
+                        Button btn = (Button) tr.getChildAt(4);
+                        btn.setText("Загружено");
+                        btn.setTextColor(0xFF00FF00);
+                    }catch (Exception e){
+                        Log.e("AUDIO",e.getMessage());
+                    }
                 }
             });
             text = new TextView(this);
@@ -168,5 +178,11 @@ public class AudioActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
 
+    }
+    public void btnStartAudioService(View view){
+        startService(new Intent(this, DownloadAudioService.class));
+    }
+    public void btnStopAudioService(View view){
+        stopService(new Intent(this, DownloadAudioService.class));
     }
 }

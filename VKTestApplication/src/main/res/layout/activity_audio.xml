@@ -22,14 +22,28 @@
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <Button
-                android:id="@+id/load_audio_bd_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Загрузить музыку"/>
+                    android:id="@+id/load_audio_bd_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Загрузить музыку"/>
+                <Button
+                    android:id="@+id/btn_start_audio_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Запустить сервис"
+                    android:onClick="btnStartAudioService"/>
+                <Button
+                    android:id="@+id/btn_staop_audio_service"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Остановить сервис"
+                    android:onClick="btnStopAudioService"/>
+            </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -42,7 +56,7 @@
                     android:visibility="gone"
                     android:layout_span="3"
                     android:id="@+id/progress_bar_audio"/>
-            </LinearLayout>
+
 
             <TableLayout
                 android:id="@+id/tableLayout2"

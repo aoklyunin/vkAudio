@@ -15,6 +15,7 @@ package com.vk.vktestapp;
 public class DialogActivity extends Activity implements OnClickListener {
 
     Button ok_btn, cancel_btn;
+    TextView text;
     int id;
 
     @Override
@@ -32,7 +33,8 @@ public class DialogActivity extends Activity implements OnClickListener {
 
         ok_btn.setOnClickListener(this);
         cancel_btn.setOnClickListener(this);
-
+        text = (TextView)findViewById(R.id.textView1);
+        text.setText("Вы хотите загрузить: "+intent.getStringExtra("LABEL")+"?");
     }
 
     @Override
@@ -49,7 +51,6 @@ public class DialogActivity extends Activity implements OnClickListener {
                 this.finish();
             break;
         }
-
     }
 
     void showToastMessage(String message) {

@@ -25,8 +25,10 @@ public class AudioRec implements Serializable{
     public static final int DONT_LOAD = 0;
     public static final int MUST_LOAD = 1;
     public static final int IS_LOAD = 2;
+    public static final String AUDIO_RECOMMEND = "Recommend";
+    public static final String AUDIO_MY = "Recommend";
 
-    public static final int columnSize = 11;
+    public static final int columnSize = 12;
     private static final long serialVersionUID = 1L;
     private int id;
     private int audio_id;       // id аудиозаписи
@@ -40,18 +42,21 @@ public class AudioRec implements Serializable{
     private String type; // рекомендованные, мои аудиозаписи или пустая аудиозапись
     private String savePath;
     private int tableRowID;
+    private boolean flgLoadComplete;
 
     class AudioDownloader extends AsyncTask<Void, Integer, Integer> {
         ProgressBar bar;
         TextView text;
         AudioDownloader(ProgressBar bar,TextView text){
+            savePath = saveFolder+artist + "-" + title + ".mp3";
             this.bar = bar;
             this.text = text;
+            flgLoadComplete = false;
         }
         // сам фоновый процесс
         @Override
         protected Integer doInBackground(Void... params) {
-            loadFile( saveFolder+artist + "-" + title + ".mp3", url);
+            loadFile(saveFolder + artist + "-" + title + ".mp3", url);
             return null;
         }
 
@@ -59,15 +64,17 @@ public class AudioRec implements Serializable{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            // задаём текст полю
-            text.setText("Идёт загрузка..");
-            // делаем поле видимым
-            text.setVisibility(View.VISIBLE);
-            // делаем ProcessBar видимым
-            bar.setVisibility(View.VISIBLE);
-            // задаём максимум ProcessBar'у
-            bar.setMax(100);
-            bar.setProgress(0);
+            if(text!=null) {
+                // задаём текст полю
+                text.setText("Идёт загрузка..");
+                // делаем поле видимым
+                text.setVisibility(View.VISIBLE);
+                // делаем ProcessBar видимым
+                bar.setVisibility(View.VISIBLE);
+                // задаём максимум ProcessBar'у
+                bar.setMax(100);
+                bar.setProgress(0);
+            }
         }
 
         // метод для загрузки файлов
@@ -116,25 +123,31 @@ public class AudioRec implements Serializable{
 
         // здесь надо обрабатывать все команды для UI
         protected void onProgressUpdate(Integer... progress) {
-            bar.setProgress(progress[0]);
-            text.setText("Идёт загрузка: "+progress[0]+"%");
+            if (text!=null) {
+                bar.setProgress(progress[0]);
+                text.setText("Идёт загрузка: " + progress[0] + "%");
+            }
         }
 
         @Override
         // что нужно сделать в конце процесса
         protected void onPostExecute(Integer param) {
-            savePath = saveFolder+artist + "-" + title + ".mp3";
             isLoaded = IS_LOAD;
-            // скрываем progressBar
-            bar.setVisibility(View.INVISIBLE);
-            // скрываем текст
-            text.setVisibility(View.INVISIBLE);
+            if (text != null){
+                // скрываем progressBar
+                bar.setVisibility(View.INVISIBLE);
+                // скрываем текст
+                text.setVisibility(View.INVISIBLE);
+            }
+            flgLoadComplete = true;
         }
 
     }
 
     //тестовая запись
-    AudioRec(int id, int audio_id,int owner_id, String artist,String title,int duration,String url,int genre_id,int isLoaded,String type,String savePath){
+    AudioRec(int id, int audio_id,int owner_id, String artist,
+             String title,int duration,String url,int genre_id,
+             int isLoaded,String type,String savePath,int tableRowID){
         this.id = id;
         this.audio_id = audio_id;
         this.owner_id = owner_id;
@@ -146,9 +159,10 @@ public class AudioRec implements Serializable{
         this.isLoaded = isLoaded;
         this.type = type;
         this.savePath = savePath;
+        this.tableRowID = tableRowID;
     }
     AudioRec(){
-        new AudioRec(0,0,0,"","",0,"",0,0,"emppty","");
+        new AudioRec(0,0,0,"","",0,"",0,0,"emppty","",0);
     }
 
     public String getTitle(){return title;}
@@ -159,7 +173,9 @@ public class AudioRec implements Serializable{
     public int getAudioId(){return audio_id;}
     public int getIsLoaded(){return isLoaded;}
     public String getType(){return type;}
+    public boolean isLoadComplete(){return flgLoadComplete;}
     public void setTableRowID(int tableRoID){this.tableRowID = tableRowID;}
+    public void setIsLoad(int isLoad){this.isLoaded = isLoad;}
     public ContentValues getDBValues(){
         ContentValues values = new ContentValues();
         values.put(DBHelper.KEY_AUDIO_ID, audio_id);
@@ -172,6 +188,7 @@ public class AudioRec implements Serializable{
         values.put(DBHelper.KEY_IS_LOADED, isLoaded);
         values.put(DBHelper.KEY_TYPE, type);
         values.put(DBHelper.KEY_PATH_TO_SAVE, savePath);
+        values.put(DBHelper.KEY_TABLE_ROW_ID,tableRowID);
         return values;
     }
     public String [] getValues(){
@@ -187,10 +204,12 @@ public class AudioRec implements Serializable{
         arr[8] = String.valueOf(isLoaded);
         arr[9] = type;
         arr[10] = savePath;
+        arr[11] = String.valueOf(tableRowID);
         return arr;
     }
-    int load(ProgressBar bar,TextView text){
+    String load(ProgressBar bar,TextView text){
         new AudioDownloader(bar,text).execute();
-        return audio_id;
+        return savePath;
     }
+    public int getTableRowID(){return tableRowID;}
 }

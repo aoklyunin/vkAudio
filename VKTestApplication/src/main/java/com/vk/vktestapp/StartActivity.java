@@ -56,7 +56,7 @@ public class StartActivity extends FragmentActivity {
         // привязываем лист
         lv = (ListView)findViewById(R.id.listView1);
         // создаём объект ВК клиента
-        cVk = new CurVkClient(this,firstBar);
+        cVk = new CurVkClient(this);
     }
     // функция вывода сообщения
     private void showMessage(String str){
@@ -66,8 +66,7 @@ public class StartActivity extends FragmentActivity {
     // кнопка загрузки аудио
     public void btnAudioInDB(View view){
         DBHelper db = new DBHelper(this);
-        cVk.fillDB(db,10,10);
-        cVk.fillDB(db,10,10);
+        cVk.alertFillDBDialog();
         Toast.makeText(this,"Аудиозаписи загружены",Toast.LENGTH_SHORT).show();
     }
     @Override

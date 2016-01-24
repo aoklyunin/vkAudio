@@ -9,12 +9,12 @@
         android:id="@+id/continue_button"
         style="@style/Button"
         android:layout_marginTop="16dp"
-        android:text="@string/continue_using_app"/>
+        android:text="using_app"/>
 
     <Button
         android:id="@+id/logout"
         style="@style/Button"
         android:layout_marginTop="16dp"
-        android:text="@string/logout"/>
+        android:text="logout"/>
 </LinearLayout>
 
