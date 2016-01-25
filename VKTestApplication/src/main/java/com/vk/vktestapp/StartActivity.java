@@ -101,10 +101,10 @@ public class StartActivity extends FragmentActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
-    public void btnLoadFile(View view){
+    public void btnDisplayMyAudio(View view){
         Intent intent = new Intent(StartActivity.this, AudioActivity.class);
         //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
-        //intent.putExtra("obj",wrapper );
+        intent.putExtra("type",AudioRec.AUDIO_MY);
         startActivity(intent);
 
     }
@@ -133,6 +133,10 @@ public class StartActivity extends FragmentActivity {
     }
 
     public void btnLoadAudio(View view){
+        Intent intent = new Intent(StartActivity.this, AudioPlayerActivity.class);
+        //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
+        //intent.putExtra("obj",wrapper );
+        startActivity(intent);
     }
 
     public void btnFillDB(View view){
@@ -151,5 +155,17 @@ public class StartActivity extends FragmentActivity {
         DBHelper db = new DBHelper(this);
         db.deleteAll();
         Toast.makeText(this,"Аудиозаписи удалены",Toast.LENGTH_SHORT).show();
+    }
+
+    public void btnLoadFirstAudioDB(View v){
+        DBHelper db = new DBHelper(this);
+        db.loadFirstAudio((ProgressBar) findViewById(R.id.firstBar),
+                          (TextView)    findViewById(R.id.barText));
+    }
+    public void btnStartAudioService(View view){
+        startService(new Intent(this, DownloadAudioService.class));
+    }
+    public void btnStopAudioService(View view){
+        stopService(new Intent(this, DownloadAudioService.class));
     }
 }

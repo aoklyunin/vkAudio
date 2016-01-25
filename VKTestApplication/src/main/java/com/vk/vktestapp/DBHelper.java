@@ -1,11 +1,14 @@
 package com.vk.vktestapp;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -32,10 +35,12 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_PATH_TO_SAVE = "pathToSave";
     public static final String KEY_TABLE_ROW_ID = "tableRowID";
 
+    // коструктор
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // создание таблицы
     @Override
     public void onCreate(SQLiteDatabase db) {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
@@ -54,12 +59,14 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
+    // обновление таблицы
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
         onCreate(db);
     }
 
+    // добавляем аудиозапись
     public void addAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
         // проверяем, нет ли уже записи с таким же audio_id
@@ -80,7 +87,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }catch (SQLException e){
             Log.e("SQL DB",e.getMessage());
         }
-
         db.close();
     }
 
@@ -109,18 +115,7 @@ public class DBHelper extends SQLiteOpenHelper {
         if (cursor != null){
             cursor.moveToFirst();
         }
-        AudioRec audio = new AudioRec(cursor.getInt(0),
-                cursor.getInt(1) ,
-                cursor.getInt(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getInt(5),
-                cursor.getString(6),
-                cursor.getInt(7),
-                cursor.getInt(8),
-                cursor.getString(9),
-                cursor.getString(10),
-                cursor.getInt(11));
+        AudioRec audio = new AudioRec(cursor);
         return audio;
     }
 
@@ -133,24 +128,70 @@ public class DBHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()) {
             do {
-                AudioRec audio =  new AudioRec(cursor.getInt(0),
-                                               cursor.getInt(1) ,
-                                               cursor.getInt(2),
-                                               cursor.getString(3),
-                                               cursor.getString(4),
-                                               cursor.getInt(5),
-                                               cursor.getString(6),
-                                               cursor.getInt(7),
-                                               cursor.getInt(8),
-                                               cursor.getString(9),
-                                               cursor.getString(10),
-                                               cursor.getInt(11) );
+                AudioRec audio =  new AudioRec(cursor);
                 audioList.add(audio);
             } while (cursor.moveToNext());
         }
         db.close();
         return audioList;
     }
+
+    public List<AudioRec> getAudioMy() {
+        List<AudioRec> audioList = new ArrayList<AudioRec>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_MY+"'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                AudioRec audio =  new AudioRec(cursor);
+                audioList.add(audio);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return audioList;
+    }
+    public List<AudioRec> getAudioRecommend() {
+        List<AudioRec> audioList = new ArrayList<AudioRec>();
+        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_RECOMMEND+"'";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                AudioRec audio =  new AudioRec(cursor);
+                audioList.add(audio);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        db.close();
+        return audioList;
+    }
+
+    void loadAudioByTablleRowIdDialog(int id,Activity activity){
+        try {
+            AudioRec audio = getAudioByTableRowID(id);
+            String savePath = audio.loadDialog(activity);
+            setAudioIsLoaded(audio.getAudioId(), savePath);
+        }catch (Exception e){
+            Log.d("AUDIO",e.getMessage());
+        }
+    }
+    void loadAudioByTablleRowIdDialogAndPlay(int id,Activity activity){
+        try {
+            AudioRec audio = getAudioByTableRowID(id);
+            String savePath = audio.loadDialogAndPlay(activity);
+            setAudioIsLoaded(audio.getAudioId(), savePath);
+        }catch (Exception e){
+            Log.d("AUDIO",e.getMessage());
+        }
+    }
+
+
+
 
     public int updateAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -175,22 +216,36 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getAudioRecCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+    public int getAudioRecomendCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_RECOMMEND+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
+        int cnt = cursor.getCount();
         cursor.close();
-        return cursor.getCount();
+        db.close();
+        return cnt;
     }
+    public int getAudioMyCount() {
+        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_MY+"'";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int cnt = cursor.getCount();
+        cursor.close();
+        db.close();
+        return cnt;
+    }
+
     public int getCountMustLoad(){
         SQLiteDatabase db = this.getWritableDatabase();
         String count = "SELECT count(*) FROM "+ TABLE_CONTACTS + " WHERE " + KEY_IS_LOADED+"="+AudioRec.MUST_LOAD;
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         int cnt = mcursor.getInt(0);
+        mcursor.close();
         db.close();
         return cnt;
     }
+
 
     public AudioRec getAudioByTableRowID(int id){
         String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
@@ -199,18 +254,7 @@ public class DBHelper extends SQLiteOpenHelper {
         AudioRec audio = null;
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            audio = new AudioRec(cursor.getInt(0),
-                    cursor.getInt(1) ,
-                    cursor.getInt(2),
-                    cursor.getString(3),
-                    cursor.getString(4),
-                    cursor.getInt(5),
-                    cursor.getString(6),
-                    cursor.getInt(7),
-                    cursor.getInt(8),
-                    cursor.getString(9),
-                    cursor.getString(10),
-                    cursor.getInt(11));
+            audio = new AudioRec(cursor);
         }else {
             Log.e("SQL DB", "Не найдено ни одной записи на загрузку");
         }
@@ -222,25 +266,16 @@ public class DBHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
                              " WHERE "+ KEY_IS_LOADED+"="+AudioRec.MUST_LOAD+
                              " LIMIT 1";
+        Log.e("SQL","queyLoad: "+selectQuery);
         SQLiteDatabase db = this.getWritableDatabase();
         AudioRec audio = null;
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
-            audio = new AudioRec(cursor.getInt(0),
-                                 cursor.getInt(1) ,
-                                 cursor.getInt(2),
-                                 cursor.getString(3),
-                                 cursor.getString(4),
-                                 cursor.getInt(5),
-                                 cursor.getString(6),
-                                 cursor.getInt(7),
-                                 cursor.getInt(8),
-                                 cursor.getString(9),
-                                 cursor.getString(10),
-                                 cursor.getInt(11));
+            audio = new AudioRec(cursor);
         }else {
             Log.e("SQL DB", "Не найдено ни одной записи на загрузку");
         }
+        cursor.close();
         db.close();
         return audio;
     }
@@ -248,7 +283,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
                 KEY_IS_LOADED + " = 2, "+ KEY_PATH_TO_SAVE+" = '"+savePath+"' WHERE "+ KEY_AUDIO_ID +" = "+audioId;
-        Log.d("SQL DB",execStr);
+        Log.e("SQL", "isLoadQuery: " + execStr);
         try {
             db.execSQL(execStr);
         }catch (SQLException e){

@@ -49,6 +49,20 @@
             android:name=".DownloadAudioService"
             android:enabled="true"
             android:exported="true" />
+
+        <!--
+             ATTENTION: This was auto-generated to add Google Play services to your project for
+             App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity android:name=".AudioPlayerDialog" />
+        <activity
+            android:name=".AudioPlayerActivity"
+            android:label="@string/title_activity_audio_player"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

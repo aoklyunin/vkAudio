@@ -74,9 +74,9 @@
             android:layout_height="match_parent"
             />
         <Button
-            android:onClick="btnLoadFile"
+            android:onClick="btnDisplayMyAudio"
             android:id= "@+id/load_button_file"
-            android:text = "Аудиозаписи"
+            android:text = "Мои аудиозаписи"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
@@ -98,13 +98,41 @@
 
     </TableRow>
 
+    <TableRow
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:onClick="btnStartService"
+            android:id= "@+id/btn_start_service"
+            android:text = "Запустить сервис азгрузки"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            />
+        <Button
+            android:onClick="btnStopService"
+            android:id= "@+id/btn_stop_service"
+            android:text = "Остановить сервис загрузкиэ"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            />
+        <Button
+            android:onClick="btnLoadFirstAudioDB"
+            android:id= "@+id/first_audio_bd"
+            android:text = "Загрузить первую аудиозапись"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            />
+    </TableRow>
+
+
     <TableRow android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:padding="2dp">
         <Button
             android:onClick="btnLoadAudio"
             android:id= "@+id/create_db"
-            android:text = "Загрузить аудио"
+            android:text = "Аудио Плеер"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
@@ -122,6 +150,7 @@
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
+
     </TableRow>
 
     <TableRow
