@@ -1,18 +1,26 @@
 package com.vk.vktestapp;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +64,10 @@ public class AudioRec implements Serializable{
     private int tableRowID;
     private boolean flgLoadComplete;
 
+    private MediaPlayer mediaPlayer;
+    private SeekBar seek;
+    private Activity activity;
+
 
     public String limitStr(String s){
         if(s.length()<=40)
@@ -67,16 +79,20 @@ public class AudioRec implements Serializable{
         ProgressBar bar;
         TextView text;
         boolean flgText;
-        Activity activity;
         ProgressDialog barProgressDialog;
         boolean flgPlay;
 
-        AudioDownloader(Activity activity, boolean flgPlay){
+        AudioDownloader(boolean flgPlay){
             savePath = saveFolder+type+"/"+artist + "-" + title + ".mp3";
             savePath = savePath.replaceAll("'","");
             flgText  = false;
-            this.activity = activity;
             this.flgPlay = flgPlay;
+            DBHelper db = new DBHelper(activity);
+            db.setAudioIsLoadedTR(tableRowID,savePath);
+            TableRow tr = (TableRow) activity.findViewById(tableRowID);
+            Button btn = (Button) tr.getChildAt(4);
+            btn.setText("Загружено");
+            btn.setTextColor(0xFF00FF00);
         }
         AudioDownloader(ProgressBar bar,TextView text){
             savePath = saveFolder+type+"/"+artist + "-" + title + ".mp3";
@@ -111,9 +127,8 @@ public class AudioRec implements Serializable{
                 }
             }else{
                 barProgressDialog = new ProgressDialog(activity);
-
-                barProgressDialog.setTitle("Downloading Image ...");
-                barProgressDialog.setMessage("Download in progress ...");
+                barProgressDialog.setTitle("Загрузка аудиозаписи ...");
+                barProgressDialog.setMessage(artist+" - "+title);
                 barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
                 barProgressDialog.setProgress(0);
                 barProgressDialog.setMax(100);
@@ -193,28 +208,98 @@ public class AudioRec implements Serializable{
                 if(!flgPlay)
                     Toast.makeText(activity,"Загрузка завершена",Toast.LENGTH_SHORT).show();
                 else{
-                    play(activity);
+                    play();
                 }
             }
             flgLoadComplete = true;
         }
-
     }
 
-    void play(Activity activity) {
-          MediaPlayer mPlayer = new MediaPlayer();
-          Uri myUri = Uri.parse(savePath);
-          mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-          try {
-                mPlayer.setDataSource(activity, myUri);
-                mPlayer.prepare();
-          } catch (IOException e) {
-              Log.e("AUDIO ACTIVITY", e.getMessage());
-          }
-          mPlayer.start();
-                   // mPlayer.release();*/
+    public void downloadDialog(){
+        if (isLoaded!=IS_LOAD) {
+            // создаём диалог
+            final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+            // заголовок
+            alert.setTitle("Загрузка");
+            // текст
+            alert.setMessage("Загрузить " + artist + " - " + title + "?");
+            // кнопка остановки
+            alert.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    loadDialog();
+                }
+            });
+            alert.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                }
+            });
+            alert.show();
+        }else{
+            Toast.makeText(activity,"Уже загружено",Toast.LENGTH_SHORT).show();
+        }
     }
-
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    void play() {
+        // создаём диалог
+        final AlertDialog.Builder alert = new AlertDialog.Builder(activity);
+        // заголовок
+        alert.setTitle("Проигрыватель");
+        // текст
+        alert.setMessage(artist+" - "+title);
+        // линейная разметка
+        LinearLayout linear=new LinearLayout(activity);
+        linear.setOrientation(LinearLayout.VERTICAL);
+        // ползунок
+        seek=new SeekBar(activity);
+        linear.addView(seek);
+        // выводим на активность разметку
+        alert.setView(linear);
+        // музыкальный плеер
+        mediaPlayer = MediaPlayer.create(activity, Uri.parse(savePath));
+        mediaPlayer.start();
+        // задаём максимум
+        seek.setMax(mediaPlayer.getDuration());
+        // кнопка остановки
+        alert.setNegativeButton("Стоп", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mediaPlayer.stop();
+            }
+        });
+        // обработка сворачивания диалога
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mediaPlayer.stop();
+            }
+        });
+        // обработка передвижения ползунка
+        seek.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mediaPlayer.isPlaying()) {
+                    SeekBar sb = (SeekBar) v;
+                    mediaPlayer.seekTo(sb.getProgress());
+                }
+                return false;
+            }
+        });
+        startPlayProgressUpdater();
+        alert.show();
+    }
+    // синхронизация ползунка с плеером
+    public void startPlayProgressUpdater() {
+        seek.setProgress(mediaPlayer.getCurrentPosition());
+        if (mediaPlayer.isPlaying()) {
+            Runnable notification = new Runnable() {
+                public void run() {
+                    startPlayProgressUpdater();
+                }
+            };
+            seek.postDelayed(notification,1000);
+        }else{
+            mediaPlayer.pause();
+        }
+    }
     //тестовая запись
     AudioRec(int id, int audio_id,int owner_id, String artist,
              String title,int duration,String url,int genre_id,
@@ -249,7 +334,7 @@ public class AudioRec implements Serializable{
         this.savePath = cursor.getString(10);
         this.tableRowID = cursor.getInt(11);
     }
-
+    public void setActivity(Activity activity){this.activity = activity;};
     public String getTitle(){return limitStr(title);}
     public String getArtist(){return limitStr(artist);}
     public int getID(){return id;}
@@ -296,15 +381,17 @@ public class AudioRec implements Serializable{
         new AudioDownloader(bar,text).execute();
         return savePath;
     }
-
-    String loadDialog(Activity activity){
-        new AudioDownloader(activity,false).execute();
+    String loadDialog(){
+        new AudioDownloader(false).execute();
         return savePath;
     }
-    String loadDialogAndPlay(Activity activity){
-        new AudioDownloader(activity,true).execute();
+    String loadDialogAndPlay(){
+        if (isLoaded!=IS_LOAD) {
+            new AudioDownloader(true).execute();
+        }else{
+            play();
+        }
         return savePath;
     }
-
     public int getTableRowID(){return tableRowID;}
 }

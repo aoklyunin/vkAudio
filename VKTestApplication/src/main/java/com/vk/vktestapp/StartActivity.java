@@ -1,13 +1,24 @@
 package com.vk.vktestapp;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +39,7 @@ public class StartActivity extends FragmentActivity {
     public ProgressBar firstBar; // ProcessBar
     public TextView barText; // индикация для ProcessBar'a
     public CurVkClient cVk; // переменная для работы с ВК
+
     // кнопка входа
     public void btnSignIn(View view){
         cVk.setFirstLogin(true);
@@ -104,7 +116,7 @@ public class StartActivity extends FragmentActivity {
     public void btnDisplayMyAudio(View view){
         Intent intent = new Intent(StartActivity.this, AudioActivity.class);
         //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
-        intent.putExtra("type",AudioRec.AUDIO_MY);
+        intent.putExtra("type", AudioRec.AUDIO_MY);
         startActivity(intent);
 
     }
@@ -133,10 +145,7 @@ public class StartActivity extends FragmentActivity {
     }
 
     public void btnLoadAudio(View view){
-        Intent intent = new Intent(StartActivity.this, AudioPlayerActivity.class);
-        //AudioRecWrapper wrapper = new AudioRecWrapper(cVk.getAudioMap());
-        //intent.putExtra("obj",wrapper );
-        startActivity(intent);
+
     }
 
     public void btnFillDB(View view){
@@ -162,10 +171,11 @@ public class StartActivity extends FragmentActivity {
         db.loadFirstAudio((ProgressBar) findViewById(R.id.firstBar),
                           (TextView)    findViewById(R.id.barText));
     }
-    public void btnStartAudioService(View view){
+    public void btnStartService(View view){
         startService(new Intent(this, DownloadAudioService.class));
     }
-    public void btnStopAudioService(View view){
+    public void btnStopService(View view){
         stopService(new Intent(this, DownloadAudioService.class));
     }
+
 }

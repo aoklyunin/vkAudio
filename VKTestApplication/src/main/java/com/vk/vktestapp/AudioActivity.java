@@ -79,6 +79,13 @@ public class AudioActivity extends Activity implements View.OnTouchListener {
         View.OnClickListener lsn = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.e("CLICKLISTENER","Сработало");
+                TableRow tr = (TableRow) v.getParent();
+                DBHelper db = new DBHelper(AudioActivity.this);
+                AudioRec audio = db.getAudioByTableRowID(tr.getId());
+                audio.setActivity(AudioActivity.this);
+                audio.downloadDialog();
+                /*
                 DBHelper db = new DBHelper(getApplicationContext());
                 Intent intent = new Intent(getApplicationContext(), DialogActivity.class);
                 TableRow tr = (TableRow) v.getParent();
@@ -87,6 +94,7 @@ public class AudioActivity extends Activity implements View.OnTouchListener {
                 AudioRec audio = db.getAudioByTableRowID(tr.getId());
                 intent.putExtra("LABEL",audio.getArtist()+"-"+audio.getTitle());
                 startActivityForResult(intent,1);
+                */
             }
         };
 
@@ -98,13 +106,12 @@ public class AudioActivity extends Activity implements View.OnTouchListener {
         tableRow.addView(text, 0);
 
 
-
         Button btnPlay = new Button(this);
         btnPlay.setText("Проиграть");
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBHelper db = new DBHelper(getApplicationContext());
+                DBHelper db = new DBHelper(AudioActivity.this);
                 TableRow tr = (TableRow) v.getParent();
                 db.loadAudioByTablleRowIdDialogAndPlay(tr.getId(), AudioActivity.this);
             }
@@ -128,9 +135,6 @@ public class AudioActivity extends Activity implements View.OnTouchListener {
         text.setTextSize(25);
         text.setOnClickListener(lsn);
         tableRow.addView(text, 3);
-
-
-
 
         Button btn = new Button(this);
         switch (audio.getIsLoaded()) {

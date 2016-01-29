@@ -39,6 +39,9 @@
     <string name="logout">Logout</string>
     <string name="send_request_title">Choose friend</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+
+        <string name="play_str">PLAY</string>
+        <string name="pause_str">PAUSE</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
 

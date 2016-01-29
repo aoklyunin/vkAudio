@@ -34,11 +34,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_TYPE = "type";
     public static final String KEY_PATH_TO_SAVE = "pathToSave";
     public static final String KEY_TABLE_ROW_ID = "tableRowID";
+    private Activity activity;
 
     // коструктор
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+    public DBHelper(Activity activity) {
+        super(activity, DATABASE_NAME, null, DATABASE_VERSION);
+        this.activity = activity;
+    }
+
 
     // создание таблицы
     @Override
@@ -174,7 +180,8 @@ public class DBHelper extends SQLiteOpenHelper {
     void loadAudioByTablleRowIdDialog(int id,Activity activity){
         try {
             AudioRec audio = getAudioByTableRowID(id);
-            String savePath = audio.loadDialog(activity);
+            audio.setActivity(activity);
+            String savePath = audio.loadDialog();
             setAudioIsLoaded(audio.getAudioId(), savePath);
         }catch (Exception e){
             Log.d("AUDIO",e.getMessage());
@@ -183,7 +190,8 @@ public class DBHelper extends SQLiteOpenHelper {
     void loadAudioByTablleRowIdDialogAndPlay(int id,Activity activity){
         try {
             AudioRec audio = getAudioByTableRowID(id);
-            String savePath = audio.loadDialogAndPlay(activity);
+            audio.setActivity(activity);
+            String savePath = audio.loadDialogAndPlay();
             setAudioIsLoaded(audio.getAudioId(), savePath);
         }catch (Exception e){
             Log.d("AUDIO",e.getMessage());
@@ -283,6 +291,18 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
         String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
                 KEY_IS_LOADED + " = 2, "+ KEY_PATH_TO_SAVE+" = '"+savePath+"' WHERE "+ KEY_AUDIO_ID +" = "+audioId;
+        Log.e("SQL", "isLoadQuery: " + execStr);
+        try {
+            db.execSQL(execStr);
+        }catch (SQLException e){
+            Log.d("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
+    void setAudioIsLoadedTR(int rowId,String savePath){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+                KEY_IS_LOADED + " = 2, "+ KEY_PATH_TO_SAVE+" = '"+savePath+"' WHERE "+ KEY_TABLE_ROW_ID +" = "+rowId;
         Log.e("SQL", "isLoadQuery: " + execStr);
         try {
             db.execSQL(execStr);
