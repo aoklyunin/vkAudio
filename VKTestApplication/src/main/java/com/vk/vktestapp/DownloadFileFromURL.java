@@ -37,24 +37,8 @@ class DownloadFileFromURL extends AsyncTask<Void, Integer, Integer> {
     // сам фоновый процесс
     @Override
     protected Integer doInBackground(Void... params) {
-        if (sourceUrl=="") {
-            // номер скачиваемой аудиозаписи
-            int pos = 0;
-            // проходим по всем элементам мн-ва названий аудиозаписей
-            for (AudioRec audio : CurVkClient.getAudioMap()) {
-                // отображаем изменения в progressBar'e
-                publishProgress(pos);
-                String name = audio.getArtist()+" "+audio.getTitle();
-                // выводим в лог
-                Log.d("DOWNLOAD FROM VK", name + "    " + audio.getUrl());
-                // загружаем файл
-                loadFile(pathToSave + name + ".mp3", audio.getUrl());
-                // увеличиваем номер скачиваемой аудиозаписи
-                pos++;
-            }
-        }else{
+        if (sourceUrl!="")
             loadFile(pathToSave, sourceUrl);
-        }
         return null;
     }
 
@@ -69,10 +53,7 @@ class DownloadFileFromURL extends AsyncTask<Void, Integer, Integer> {
         // делаем ProcessBar видимым
         firstBar.setVisibility(View.VISIBLE);
         // задаём максимум ProcessBar'у
-        if (sourceUrl.equals(""))
-            firstBar.setMax(CurVkClient.getAudioMap().size());
-        else
-            firstBar.setMax(100);
+        firstBar.setMax(100);
     }
     // метод для загрузки файлов
     public void loadFile(String path,String urlPath){

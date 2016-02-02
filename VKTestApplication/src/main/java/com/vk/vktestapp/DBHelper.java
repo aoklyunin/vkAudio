@@ -34,6 +34,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_TYPE = "type";
     public static final String KEY_PATH_TO_SAVE = "pathToSave";
     public static final String KEY_TABLE_ROW_ID = "tableRowID";
+
     private Activity activity;
 
     // коструктор
@@ -222,6 +223,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CONTACTS, null, null);
         db.close();
+        Toast.makeText(activity,"Аудиозаписи удалены",Toast.LENGTH_SHORT).show();
     }
 
     public int getAudioRecomendCount() {

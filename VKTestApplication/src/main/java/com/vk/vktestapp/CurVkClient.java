@@ -1,23 +1,17 @@
-// в конструторе я передаю Активность как параметр -
-// не знаю, стоит так делать или нет, но пока что работает
-
 package com.vk.vktestapp;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.vk.sdk.VKCallback;
@@ -25,6 +19,7 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKBatchRequest;
 import com.vk.sdk.api.VKError;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
@@ -32,18 +27,10 @@ import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.model.VKApiAudio;
 import com.vk.sdk.api.model.VKList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
 
-/**
- * Created by student on 23.11.15.
- */
 public class CurVkClient {
     private static final String[] sMyScope = new String[]{
             VKScope.FRIENDS,
@@ -55,111 +42,156 @@ public class CurVkClient {
             VKScope.AUDIO,
             VKScope.ADS
     };
-    private static ArrayList<AudioRec> audioArr;
-
-    private boolean flgGetRecommend = false;
-
     private boolean flgFirstLogin;
     private boolean isResumed = false;
     private Activity mainActivity;
-
-    public static ArrayList<AudioRec>getAudioMap(){ return audioArr;}
-
-    public static void clearAudioMap(){ audioArr.clear();}
-    public boolean isFirstLogin(){ return flgFirstLogin;}
     public void setFirstLogin(boolean flg){flgFirstLogin=flg;}
-    public void setFlgGetRecommend(boolean flg){flgGetRecommend=flg;}
-    public boolean getFlgGetRecommend(){ return flgGetRecommend;}
     public void setIsResumed(boolean flg){isResumed=flg;}
-    public boolean getIsResumed(){ return isResumed;}
-    private String [] audioHandles;
 
     // загрузка аудио
-    public void loadMyAudio(int cnt,int offset){
-        VKParameters params = new VKParameters();
-        params.put(VKApiConst.OFFSET, offset);
-        params.put(VKApiConst.COUNT, cnt);
-        VKRequest requestAudio = VKApi.audio().get(params);
-        requestAudio.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                processAudioResponse(response, false);
-            }
+    public void loadAudio(int audioMyCnt,int audioRecCnt){
+        if (audioMyCnt!=0 && audioRecCnt!=0) {
+            // запрос на мои аудиозаписи
+            VKParameters params = new VKParameters();
+            params.put(VKApiConst.COUNT, audioMyCnt);
+            VKRequest requestAudioMy = VKApi.audio().get(params);
+            // запрос на рекомендованные аудиозаписи
+            params = new VKParameters();
+            params.put(VKApiConst.COUNT, audioRecCnt);
+            VKRequest requestAudioRec = VKApi.audio().getRecommendations(params);
+            VKBatchRequest batch = new VKBatchRequest(requestAudioMy, requestAudioRec);
+            batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
+                @Override
+                public void onComplete(VKResponse[] responses) {
+                    new AudioResponseProcessor(responses).execute();
+                }
 
-            @Override
-            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                super.attemptFailed(request, attemptNumber, totalAttempts);
+                @Override
+                public void onError(VKError error) {
+                    getVkError(error);
+                    super.onError(error);
+                }
+            });
+        }else{
+            VKParameters params = new VKParameters();
+            VKRequest request;
+            final String type;
+            if(audioMyCnt>0) {
+                params.put(VKApiConst.COUNT, audioMyCnt);
+                request = VKApi.audio().get(params);
+                type = AudioRec.AUDIO_MY;
+            }else{
+                params.put(VKApiConst.COUNT, audioRecCnt);
+                request = VKApi.audio().getRecommendations(params);
+                type = AudioRec.AUDIO_RECOMMEND;
             }
+            request.executeWithListener(new VKRequest.VKRequestListener() {
+                @Override
+                public void onComplete(VKResponse response) {
+                    new AudioResponseProcessor(response,type).execute();
+                }
 
-            @Override
-            public void onError(VKError error) {
-                getVkError(error);
-                super.onError(error);
-            }
-
-            @Override
-            public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-                super.onProgress(progressType, bytesLoaded, bytesTotal);
-            }
-        });
-
-    }
-    // получить рекомендованные запис
-    public void getRecommendAudio(int cnt){
-        flgGetRecommend = false;
-        VKParameters params = new VKParameters();
-        params.put(VKApiConst.COUNT, cnt);
-        VKRequest requestAudio = VKApi.audio().getRecommendations(params);
-        requestAudio.executeWithListener(new VKRequest.VKRequestListener() {
-            @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                processAudioResponse(response, true);
-                flgGetRecommend = true;
-            }
-
-            @Override
-            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                super.attemptFailed(request, attemptNumber, totalAttempts);
-            }
-
-            @Override
-            public void onError(VKError error) {
-                getVkError(error);
-                super.onError(error);
-            }
-
-            @Override
-            public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-                super.onProgress(progressType, bytesLoaded, bytesTotal);
-            }
-        });
-    }
-    // обработка запроса на получение аудиозаписей
-    public void processAudioResponse(VKResponse response,boolean flgRecommend){
-        // получаем экземпляр элемента ListView
-        int size = ((VKList<VKApiAudio>) response.parsedModel).size();
-        Log.d("AUDIO_RESPONSE", "кол-во записей: " + size);
-        for (int i = 0; i < size; i++) {
-            VKApiAudio vkApiAudio = ((VKList<VKApiAudio>) response.parsedModel).get(i);
-            AudioRec audio = new AudioRec(0,vkApiAudio.id,vkApiAudio.owner_id,
-                                          vkApiAudio.title,vkApiAudio.artist,vkApiAudio.duration,
-                                          vkApiAudio.url,vkApiAudio.genre,0,"","",0);
-            if (flgRecommend) {
-                audio.setType(AudioRec.AUDIO_RECOMMEND);
-                audio.setIsLoad(0);
-            } else {
-                audio.setType(AudioRec.AUDIO_MY);
-                audio.setIsLoad(1);
-            }
-            audioArr.add(audio);
+                @Override
+                public void onError(VKError error) {
+                    getVkError(error);
+                    super.onError(error);
+                }
+            });
         }
     }
+
+    class AudioResponseProcessor extends AsyncTask<Void, Integer, Integer> {
+        VKResponse[] responses;
+        VKResponse response;
+        String type;
+        DBHelper db;
+        int sizeMy;
+        int sizeRec;
+        int size;
+        ProgressDialog barProgressDialog;
+        boolean flgResponseArr;
+
+        AudioResponseProcessor(VKResponse[] responses){
+            this.responses = responses;
+            db = new DBHelper(mainActivity);
+            sizeMy =  ((VKList<VKApiAudio>) responses[0].parsedModel).size();
+            sizeRec = ((VKList<VKApiAudio>) responses[1].parsedModel).size();
+            flgResponseArr = true;
+        }
+        AudioResponseProcessor(VKResponse response,String type){
+            this.response = response;
+            this.type = type;
+            db = new DBHelper(mainActivity);
+            size = ((VKList<VKApiAudio>) response.parsedModel).size();
+            flgResponseArr = false;
+        }
+        // сам фоновый процесс
+        @Override
+        protected Integer doInBackground(Void... params) {
+            if (flgResponseArr) {
+                for (int i = 0; i < sizeMy; i++) {
+                    VKApiAudio vkApiAudio = ((VKList<VKApiAudio>) responses[0].parsedModel).get(i);
+                    AudioRec audio = new AudioRec(0, vkApiAudio.id, vkApiAudio.owner_id,
+                            vkApiAudio.title, vkApiAudio.artist, vkApiAudio.duration,
+                            vkApiAudio.url, vkApiAudio.genre, AudioRec.MUST_LOAD, AudioRec.AUDIO_MY, "", 0);
+                    db.addAudioRec(audio);
+                    publishProgress(i);
+                }
+                for (int i = 0; i < sizeRec; i++) {
+                    VKApiAudio vkApiAudio = ((VKList<VKApiAudio>) responses[1].parsedModel).get(i);
+                    AudioRec audio = new AudioRec(0, vkApiAudio.id, vkApiAudio.owner_id,
+                            vkApiAudio.title, vkApiAudio.artist, vkApiAudio.duration,
+                            vkApiAudio.url, vkApiAudio.genre, AudioRec.DONT_LOAD, AudioRec.AUDIO_RECOMMEND, "", 0);
+                    db.addAudioRec(audio);
+                    publishProgress(i + sizeMy);
+                }
+            }else{
+                for (int i = 0; i < size; i++) {
+                    VKApiAudio vkApiAudio = ((VKList<VKApiAudio>) response.parsedModel).get(i);
+                    AudioRec audio = new AudioRec(0, vkApiAudio.id, vkApiAudio.owner_id,
+                            vkApiAudio.title, vkApiAudio.artist, vkApiAudio.duration,
+                            vkApiAudio.url, vkApiAudio.genre, 0, type, "", 0);
+                    if (type==AudioRec.AUDIO_MY)
+                        audio.setIsLoad(AudioRec.MUST_LOAD);
+                    else
+                        audio.setIsLoad(AudioRec.DONT_LOAD);
+                    db.addAudioRec(audio);
+                    publishProgress(i);
+                }
+            }
+            return 0;
+        }
+
+        // инициализация процесса
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            barProgressDialog = new ProgressDialog(mainActivity);
+            barProgressDialog.setTitle("Добавление аудиозаписей в БД...");
+            barProgressDialog.setProgressStyle(barProgressDialog.STYLE_HORIZONTAL);
+            barProgressDialog.setProgress(0);
+            if (flgResponseArr)
+                barProgressDialog.setMax(sizeMy + sizeRec);
+            else
+                barProgressDialog.setMax(size);
+            barProgressDialog.show();
+        }
+        // здесь надо обрабатывать все команды для UI
+        protected void onProgressUpdate(Integer... progress) {
+            barProgressDialog.setProgress(progress[0]);
+        }
+
+        @Override
+        // что нужно сделать в конце процесса
+        protected void onPostExecute(Integer param) {
+            barProgressDialog.dismiss();
+            Toast.makeText(mainActivity,"Загрузка завершена",Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // конструктор
     CurVkClient(Context c){
         mainActivity = (Activity)c;
-        audioArr = new ArrayList<AudioRec>();
         flgFirstLogin = true;
         // запускаем API Вконтакте
         VKSdk.wakeUpSession(c, new VKCallback<VKSdk.LoginState>() {
@@ -178,6 +210,7 @@ public class CurVkClient {
             }
         });
     }
+
     // функция выхода из ВК
     public void logout(){VKSdk.logout();}
     // обработка ошибок VK
@@ -202,42 +235,16 @@ public class CurVkClient {
             flgFirstLogin = false;
         }
     }
-    // заполлняем БД аудиозаписями
-    public void fillDB(DBHelper db,int recCnt,int audioCnt){
-        // загуржаем аудиозаписи
-        loadMyAudio(audioCnt, 0);
-        // загружаем рекомендумые аудиозаписи
-        getRecommendAudio(recCnt);
-        // каждую аудиозапись по-отдельность забиваем в БД
-        for (AudioRec audio: audioArr){
-            db.addAudioRec(audio);
-        }
-    }
-    // заполлняем БД аудиозаписями
-    public void fillMyAudioDB(DBHelper db,int audioCnt){
-        // загуржаем аудиозаписи
-        int offset = 0;
-        if (audioCnt>6000) audioCnt = 6000;
-        loadMyAudio(audioCnt,0);
-        // каждую аудиозапись по-отдельность забиваем в БД
-        for (AudioRec audio: audioArr){
-            db.addAudioRec(audio);
-        }
-    }
-    // получить кол-во моих аудиозаписей
-    public void alertFillDBDialog(){
-        VKParameters params = new VKParameters();
-        VKRequest requestAudio = VKApi.audio().get(params);
-        requestAudio.executeWithListener(new VKRequest.VKRequestListener() {
+    // Дилог добавления аудиозаписей в БД
+    public void alertAudioInDBDialog(){
+        VKRequest requestAudioMy  = VKApi.audio().get();
+        VKRequest requestAudioRec = VKApi.audio().getRecommendations();
+        VKBatchRequest batch = new VKBatchRequest(requestAudioMy, requestAudioRec);
+        batch.executeWithListener(new VKBatchRequest.VKBatchRequestListener() {
             @Override
-            public void onComplete(VKResponse response) {
-                super.onComplete(response);
-                processAudioCnt(response);
-            }
-
-            @Override
-            public void attemptFailed(VKRequest request, int attemptNumber, int totalAttempts) {
-                super.attemptFailed(request, attemptNumber, totalAttempts);
+            public void onComplete(VKResponse[] responses) {
+                super.onComplete(responses);
+                processAudioCnt(responses);
             }
 
             @Override
@@ -245,47 +252,85 @@ public class CurVkClient {
                 getVkError(error);
                 super.onError(error);
             }
-
-            @Override
-            public void onProgress(VKRequest.VKProgressType progressType, long bytesLoaded, long bytesTotal) {
-                super.onProgress(progressType, bytesLoaded, bytesTotal);
-            }
         });
     }
-
-    public void processAudioCnt(VKResponse response){
-        int cnt = 0;
+    // обрабатываем кол-во аудио на загрузку
+    public boolean processAudioCnt(VKResponse[] responses){
         try {
-            JSONObject j = response.json.getJSONObject("response");
-            cnt = j.getInt("count");
+            JSONObject j = responses[0].json.getJSONObject("response");
+            int cntAudioMy = j.getInt("count");
+            j = responses[1].json.getJSONObject("response");
+            int cntAudioRec  = j.getInt("count");
+            showLoadAudioDialog(cntAudioMy,cntAudioRec);
+            Log.e("AUDIO_CNT","Доступно " + cntAudioMy  + " моих аудиозаписей");
+            Log.e("AUDIO_CNT","Доступно " + cntAudioRec + " рекомендованных аудиозаписей");
+            return true;
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.e("AUDIO_CNT", "Ошибка получения кол-ва аудиозаписей:" + e.getMessage());
+            return false;
         }
-        showChangeLangDialog(cnt);
     }
-    public void showChangeLangDialog(int cnt) {
+    // диалог выбора загрузки
+    public void showLoadAudioDialog(final int cntAduioMy, final int cntAudioRec) {
+        // подготавливаем диалог диалог
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mainActivity);
         LayoutInflater inflater = mainActivity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.audio_bd_dialog, null);
+        // получаем описание диалога
+        final View dialogView = inflater.inflate(R.layout.audio_in_bd_dialog, null);
         dialogBuilder.setView(dialogView);
-
-        final EditText edt = (EditText) dialogView.findViewById(R.id.edit1);
-
+        // получаем вьюхи элементов управления
+        final EditText edtAudioMy    = (EditText) dialogView.findViewById(R.id.edit1);
+        final EditText edtAudioRec   = (EditText) dialogView.findViewById(R.id.edit2);
+        final CheckBox checkAudioMy  = (CheckBox) dialogView.findViewById(R.id.checkBox1);
+        final CheckBox checkAudioRec = (CheckBox) dialogView.findViewById(R.id.checkBox2);
+        // вешаем обработчики нажатия на checkBox
+        checkAudioMy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    edtAudioMy.setEnabled(true);
+                } else {
+                    edtAudioMy.setEnabled(false);
+                }
+            }
+        });
+        checkAudioRec.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    edtAudioRec.setEnabled(true);
+                } else {
+                    edtAudioRec.setEnabled(false);
+                }
+            }
+        });
+        // задаём начальные значения
+        edtAudioRec.setText(cntAudioRec + "");
+        edtAudioMy.setText(cntAduioMy + "");
+        // задаём заголовок диалога
         dialogBuilder.setTitle("Добавление в БД");
-        dialogBuilder.setMessage("Всего: "+cnt+". Сколько добавить?");
+        // задаём текст диалога
+        dialogBuilder.setMessage("Всего:\n   " + cntAduioMy + " моих аудиозаписей\n   " + cntAudioRec + " рекомендованных");
+        // кнопка положительного ответа
         dialogBuilder.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                DBHelper db = new DBHelper(mainActivity);
-                fillMyAudioDB(db, Integer.parseInt(edt.getText().toString()));
+                int cntMy = 0;
+                int cntRec = 0;
+                if (checkAudioMy.isChecked())  cntMy = Integer.parseInt(edtAudioMy.getText().toString());
+                if (checkAudioRec.isChecked()) cntRec = Integer.parseInt(edtAudioRec.getText().toString());
+                if ( cntMy!=0||cntRec!=0)
+                    loadAudio(cntMy,cntRec);
+                else
+                    Toast.makeText(mainActivity,"Не выбрано ни одной аудиозаписи",Toast.LENGTH_SHORT).show();
             }
         });
+        // кнопка отрицательного ответа
         dialogBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-
             }
         });
+        // создаём диалог и показываем его
         AlertDialog b = dialogBuilder.create();
         b.show();
     }
-
 }

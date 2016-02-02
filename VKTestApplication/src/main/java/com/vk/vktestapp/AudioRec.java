@@ -68,7 +68,6 @@ public class AudioRec implements Serializable{
     private SeekBar seek;
     private Activity activity;
 
-
     public String limitStr(String s){
         if(s.length()<=40)
             return s;

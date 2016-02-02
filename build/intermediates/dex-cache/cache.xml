@@ -2,10 +2,17 @@
 <items version="2" >
 
     <item
+        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
+        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-4ebd5136a31769863330aaca1f85f6dbcf938066.jar" />
+    </item>
+    <item
         jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.vk\vksdk_library\1.6.2\jars\classes.jar"
         jumboMode="false"
         revision="22.0.1"
-        sha1="9df7afcef62864655f882e5d7ac83a05d8d895ca">
+        sha1="ee3c6b8581399b8be811af64522d0807a278037b">
         <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-16d1fe8b54af17b15d107e8c7e071092114b5e02.jar" />
     </item>
     <item
@@ -30,27 +37,6 @@
         <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\internal_impl-23.1.1-6836c1e656d62c61fffed45855a63bb6822b7aa2.jar" />
     </item>
     <item
-        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
-        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-91afc26cca6f43f514dfb1c0c2c8cec069228d4e.jar" />
-    </item>
-    <item
-        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
-        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-30fb28c5e826f24b904fae884147889879454446.jar" />
-    </item>
-    <item
-        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\design\23.1.1\jars\classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="379471b2bd17d9737c050345c08e8c7d16589784">
-        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-4ebd5136a31769863330aaca1f85f6dbcf938066.jar" />
-    </item>
-    <item
         jar="C:\Users\aokly\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.1.1\support-annotations-23.1.1.jar"
         jumboMode="false"
         revision="22.0.1"
@@ -63,6 +49,20 @@
         revision="22.0.1"
         sha1="d0dda274b703dd9c5bb056867649d22b4171ae7d">
         <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-56615671387f47e015cf3311bcedf84824880451.jar" />
+    </item>
+    <item
+        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\support-v4\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-91afc26cca6f43f514dfb1c0c2c8cec069228d4e.jar" />
+    </item>
+    <item
+        jar="C:\Programming\vkAudio\VKTestApplication\build\intermediates\exploded-aar\com.android.support\recyclerview-v7\23.1.1\jars\classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="09c5e804bc67fc0580360043dff067df574a60d4">
+        <dex dex="C:\Programming\vkAudio\VKTestApplication\build\intermediates\pre-dexed\debug\classes-30fb28c5e826f24b904fae884147889879454446.jar" />
     </item>
 
 </items>
