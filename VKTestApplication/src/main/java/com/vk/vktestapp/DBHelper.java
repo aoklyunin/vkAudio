@@ -1,16 +1,20 @@
 package com.vk.vktestapp;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,15 +39,28 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_PATH_TO_SAVE = "pathToSave";
     public static final String KEY_TABLE_ROW_ID = "tableRowID";
 
-    private Activity activity;
+    public static int AUDIO_ROW_CNT = 12;
 
-    // коструктор
+    private Activity activity;
+    String type;
+
+    // коструктор от контекста
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
+    // коструктор от активности
     public DBHelper(Activity activity) {
         super(activity, DATABASE_NAME, null, DATABASE_VERSION);
         this.activity = activity;
+        this.type = AudioRec.AUDIO_MY;
+        Log.e("SQL DB","вызван конструктор без указания типа аудиозаписи");
+    }
+    // конструктор от активности и типа аудио
+    public DBHelper(Activity activity,String type) {
+        super(activity, DATABASE_NAME, null, DATABASE_VERSION);
+        this.activity = activity;
+        this.type = type;
     }
 
 
@@ -92,7 +109,7 @@ public class DBHelper extends SQLiteOpenHelper {
             }
             mcursor.close();
         }catch (SQLException e){
-            Log.e("SQL DB",e.getMessage());
+            Log.e("SQL DB", e.getMessage());
         }
         db.close();
     }
@@ -111,7 +128,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public AudioRec getAudioRec(int id) {
+    public AudioRec getAudioRecById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(TABLE_CONTACTS, new String[] {
                         KEY_ID, KEY_AUDIO_ID, KEY_OWNER_ID,
@@ -143,26 +160,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return audioList;
     }
 
-    public List<AudioRec> getAudioMy() {
+    public List<AudioRec> getAudio(String type) {
         List<AudioRec> audioList = new ArrayList<AudioRec>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_MY+"'";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                AudioRec audio =  new AudioRec(cursor);
-                audioList.add(audio);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        db.close();
-        return audioList;
-    }
-    public List<AudioRec> getAudioRecommend() {
-        List<AudioRec> audioList = new ArrayList<AudioRec>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_RECOMMEND+"'";
+        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -226,17 +226,8 @@ public class DBHelper extends SQLiteOpenHelper {
         Toast.makeText(activity,"Аудиозаписи удалены",Toast.LENGTH_SHORT).show();
     }
 
-    public int getAudioRecomendCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_RECOMMEND+"'";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
-        int cnt = cursor.getCount();
-        cursor.close();
-        db.close();
-        return cnt;
-    }
-    public int getAudioMyCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+AudioRec.AUDIO_MY+"'";
+    public int getAudioCount(String type) {
+        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int cnt = cursor.getCount();
@@ -258,8 +249,9 @@ public class DBHelper extends SQLiteOpenHelper {
 
 
     public AudioRec getAudioByTableRowID(int id){
+        Log.e("DB_TYPE",type);
         String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
-                " WHERE "+ KEY_TABLE_ROW_ID+"="+id;
+                " WHERE "+ KEY_TABLE_ROW_ID+"="+id+" AND "+KEY_TYPE+"='"+type+"'";
         SQLiteDatabase db = this.getWritableDatabase();
         AudioRec audio = null;
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -325,16 +317,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void loadAudioByTablleRowId(ProgressBar firstBar, TextView barText,int id){
-        try {
-            AudioRec audio = getAudioByTableRowID(id);
-            String savePath = audio.load(firstBar, barText);
-            setAudioIsLoaded(audio.getAudioId(), savePath);
-        }catch (Exception e){
-            Log.d("AUDIO",e.getMessage());
-        }
-    }
-
     public void setTableRowId(int rowId,int id){
         SQLiteDatabase db = this.getReadableDatabase();
         String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
@@ -348,8 +330,136 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void loadAudioById(ProgressBar firstBar, TextView barText,int id){
+    
+    // создаём i-ю строчку таблицы по audio
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private TableLayout addTableRow(TableLayout tableLayout,AudioRec audio, int i) {
+        // строка таблицы
+        TableRow tableRow = new TableRow(activity);
+        // параметры строка таблицы
+        tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
+                                                           TableRow.LayoutParams.MATCH_PARENT));
+        // получаем новый id для строки в таблице
+        int id = View.generateViewId();
+        setTableRowId(id, audio.getID());
 
+        tableRow.setId(id);
+        tableLayout.addView(tableRow, i);
+
+        View.OnClickListener lsn = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TableRow tr = (TableRow) v.getParent();
+                AudioRec audio = getAudioByTableRowID(tr.getId());
+                audio.setActivity(activity);
+                audio.downloadDialog();
+            }
+        };
+
+        TextView text = new TextView(activity);
+        text.setWidth(200);
+        text.setPadding(5, 5, 5, 5);
+        text.setText(audio.getID() + "");
+        text.setTextSize(25);
+        tableRow.addView(text, 0);
+
+        Button btnPlay = new Button(activity);
+        btnPlay.setText("Проиграть");
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TableRow tr = (TableRow) v.getParent();
+                loadAudioByTablleRowIdDialogAndPlay(tr.getId(), activity);
+            }
+        });
+        tableRow.addView(btnPlay, 1);
+
+        text = new TextView(activity);
+        text.setWidth(800);
+        text.setPadding(5, 5, 5, 5);
+        text.setText(audio.getTitle());
+        text.setTextSize(25);
+        text.setOnClickListener(lsn);
+        tableRow.addView(text, 2);
+
+        text = new TextView(activity);
+        text.setWidth(800);
+        text.setPadding(5, 5, 5, 5);
+        text.setText(audio.getArtist());
+        text.setTextSize(25);
+        text.setOnClickListener(lsn);
+        tableRow.addView(text, 3);
+
+        Button btn = new Button(activity);
+        switch (audio.getIsLoaded()) {
+            case AudioRec.DONT_LOAD:
+                btn.setText("Не загружать");
+                btn.setTextColor(0xFFFF0000);
+                break;
+            case AudioRec.MUST_LOAD:
+                btn.setText("Загружать");
+                btn.setTextColor(0xFF0000FF);
+                break;
+            case AudioRec.IS_LOAD:
+                btn.setText("Загружено");
+                btn.setTextColor(0xFF00FF00);
+                break;
+        }
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TableRow tr = (TableRow) v.getParent();
+                TextView tw = (TextView) tr.getChildAt(1);
+                inverseIsLoaded((String) tw.getText());
+                Button btn = (Button) tr.getChildAt(4);
+                switch ((String) btn.getText()) {
+                    case "Загружать":
+                        btn.setText("Не загружать");
+                        btn.setTextColor(0xFFFF0000);
+                        break;
+                    case "Не загружать":
+                        btn.setText("Загружать");
+                        btn.setTextColor(0xFF0000FF);
+                        break;
+                    case "Загружено":
+                        Toast.makeText(activity, "Хотим удалить загруженное", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+        });
+        tableRow.addView(btn, 4);
+        return  tableLayout;
     }
+    // получить список аудиозаписей по номеру страницы
+    List<AudioRec> getAudiosByPos(int pos,String type){
+        List<AudioRec> audioList = getAudio(type);
+        List<AudioRec> curAudioList = new ArrayList<AudioRec>();
+        int size = audioList.size();
+        if((pos+1)*AUDIO_ROW_CNT<size)
+            for(int i=0;i<AUDIO_ROW_CNT;i++)
+                curAudioList.add(audioList.get(i+pos*AUDIO_ROW_CNT));
+        else
+            for(int i=pos*AUDIO_ROW_CNT;i<size;i++)
+                curAudioList.add(audioList.get(i));
+        return curAudioList;
+    }
+    // создаём страницу по списку аудиозаписей
+    View getAudioPage(List<AudioRec> audios){
+        // создаем LayoutParams
+        TableLayout tableLayout = new TableLayout(activity);
+        TableLayout.LayoutParams tableLayoutParam = new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+                                                                                 TableLayout.LayoutParams.MATCH_PARENT);
+        tableLayout.setLayoutParams(tableLayoutParam);
+        int i=0;
+        for (AudioRec audio : audios)
+            addTableRow(tableLayout, audio, i++);
+        return tableLayout;
+    }
+    // создаём страницу по номеру и типу
+    public View getPageByPos(int pos){
+        List<AudioRec> audios = getAudiosByPos(pos,type);
+        return getAudioPage(audios);
+    }
+
 
 }

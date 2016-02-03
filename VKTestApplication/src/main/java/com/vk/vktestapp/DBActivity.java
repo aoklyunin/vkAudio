@@ -44,7 +44,7 @@ public class DBActivity extends AppCompatActivity {
             tableRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT,
                                                                TableRow.LayoutParams.MATCH_PARENT));
             int j = 0;
-            int [] widthArr  = {70,200,200,400,400,140,400,70,70,300,400,240};
+            int [] widthArr  = {70,200,200,300,300,140,400,70,70,300,400,240};
             for (String val : audio.getValues()) {
                 TextView text = new TextView(this);
                 text.setText(val);
