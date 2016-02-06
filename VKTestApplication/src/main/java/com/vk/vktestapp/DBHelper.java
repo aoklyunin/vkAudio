@@ -44,6 +44,11 @@ public class DBHelper extends SQLiteOpenHelper {
     private Activity activity;
     String type;
 
+    public void deleteAudioByType(String type){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CONTACTS, KEY_TYPE + " = ?", new String[]{type});
+        db.close();
+    }
     // коструктор от контекста
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

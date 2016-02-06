@@ -45,6 +45,7 @@ public class AudioRec implements Serializable{
     public static final int IS_LOAD = 2;
     public static final String AUDIO_RECOMMEND = "Recommend";
     public static final String AUDIO_MY = "MyAudio";
+    public static final String AUDIO_FIND = "AudioFind";
     public static final int columnSize = 12;
     public static final int MAX_WORD_LENGTH = 35;
 

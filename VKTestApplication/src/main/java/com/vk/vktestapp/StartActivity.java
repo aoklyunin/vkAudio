@@ -23,7 +23,7 @@ public class StartActivity extends FragmentActivity {
         showMessage("вышли из ВК");
     }
 
-    public void  btnQuestionAudio(View view){
+    public void  btnFindAudio(View view){
         cVk.alertFindAudioDialog();
     }
     // конструктор активности

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,7 +49,62 @@ public class CurVkClient {
     public void setFirstLogin(boolean flg){flgFirstLogin=flg;}
     public void setIsResumed(boolean flg){isResumed=flg;}
 
+
+    void findAudios(int cnt,String query){
+        DBHelper db = new DBHelper(mainActivity);
+        db.deleteAudioByType(AudioRec.AUDIO_FIND);
+        // запрос на мои аудиозаписи
+        VKParameters params = new VKParameters();
+        params.put(VKApiConst.COUNT, cnt);
+        params.put(VKApiConst.Q,query);
+        params.put(VKApiConst.SORT,2);
+        VKRequest request = VKApi.audio().search(params);
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                new AudioResponseProcessor(response,AudioRec.AUDIO_FIND).execute();
+            }
+
+            @Override
+            public void onError(VKError error) {
+                getVkError(error);
+                super.onError(error);
+            }
+        });
+
+    }
+
     void alertFindAudioDialog(){
+        // подготавливаем диалог диалог
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mainActivity);
+        LayoutInflater inflater = mainActivity.getLayoutInflater();
+        // получаем описание диалога
+        final View dialogView = inflater.inflate(R.layout.dialog_find_audio, null);
+        dialogBuilder.setView(dialogView);
+        // получаем вьюхи элементов управления
+        final EditText findCount = (EditText) dialogView.findViewById(R.id.edit1);
+        final EditText findText   = (EditText) dialogView.findViewById(R.id.edit2);
+
+        findCount.setText("100");
+        // задаём заголовок диалога
+        dialogBuilder.setTitle("Поиск");
+        // задаём текст диалога
+        dialogBuilder.setMessage("Введите параметры поиска");
+        // кнопка положительного ответа
+        dialogBuilder.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                findAudios(Integer.parseInt(findCount.getText().toString()),
+                        findText.getText().toString());
+            }
+        });
+        // кнопка отрицательного ответа
+        dialogBuilder.setNegativeButton("Отмена", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        // создаём диалог и показываем его
+        AlertDialog b = dialogBuilder.create();
+        b.show();
 
     }
     // загрузка аудио
@@ -189,6 +245,11 @@ public class CurVkClient {
         protected void onPostExecute(Integer param) {
             barProgressDialog.dismiss();
             Toast.makeText(mainActivity,"Загрузка завершена",Toast.LENGTH_SHORT).show();
+            if (type==AudioRec.AUDIO_FIND){
+                Intent intent = new Intent(mainActivity,AudioActivity.class);
+                intent.putExtra("type",AudioRec.AUDIO_FIND);
+                mainActivity.startActivity(intent);
+            }
         }
     }
 

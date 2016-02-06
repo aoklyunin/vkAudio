@@ -114,8 +114,8 @@
             android:layout_height="match_parent"
             />
         <Button
-            android:onClick="btnQuestionAudio"
-            android:id= "@+id/btn_question"
+            android:onClick="btnFindAudio"
+            android:id= "@+id/btn_find"
             android:text = "Поиск"
             android:layout_width="70dp"
             android:layout_height="match_parent"
