@@ -22,6 +22,10 @@ public class StartActivity extends FragmentActivity {
         cVk.logout();
         showMessage("вышли из ВК");
     }
+
+    public void  btnQuestionAudio(View view){
+        cVk.alertFindAudioDialog();
+    }
     // конструктор активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {

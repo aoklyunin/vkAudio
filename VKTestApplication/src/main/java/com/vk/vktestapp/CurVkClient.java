@@ -48,6 +48,9 @@ public class CurVkClient {
     public void setFirstLogin(boolean flg){flgFirstLogin=flg;}
     public void setIsResumed(boolean flg){isResumed=flg;}
 
+    void alertFindAudioDialog(){
+
+    }
     // загрузка аудио
     public void loadAudio(int audioMyCnt,int audioRecCnt){
         if (audioMyCnt!=0 && audioRecCnt!=0) {

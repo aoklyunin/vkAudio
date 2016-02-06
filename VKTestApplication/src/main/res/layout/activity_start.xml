@@ -113,5 +113,12 @@
             android:layout_width="70dp"
             android:layout_height="match_parent"
             />
+        <Button
+            android:onClick="btnQuestionAudio"
+            android:id= "@+id/btn_question"
+            android:text = "Поиск"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            />
     </TableRow>
 </TableLayout>
