@@ -44,6 +44,19 @@ public class DBHelper extends SQLiteOpenHelper {
     private Activity activity;
     String type;
 
+    public void setIsLoad(String type,int isLoad){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+                KEY_IS_LOADED + " = "+isLoad+" WHERE "+ KEY_IS_LOADED +" <> 2 AND " + KEY_TYPE+" = '"+type+"'";
+        Log.e("SQL", "isLoadQuery: " + execStr);
+        try {
+            db.execSQL(execStr);
+        }catch (SQLException e){
+            Log.d("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
+
     public void deleteAudioByType(String type){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CONTACTS, KEY_TYPE + " = ?", new String[]{type});
@@ -463,6 +476,8 @@ public class DBHelper extends SQLiteOpenHelper {
         List<AudioRec> audios = getAudiosByPos(pos,type);
         return getAudioPage(audios);
     }
+
+
 
 
 }

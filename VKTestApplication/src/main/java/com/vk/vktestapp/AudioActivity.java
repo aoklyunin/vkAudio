@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TableRow;
 
@@ -102,5 +103,15 @@ public class AudioActivity extends FragmentActivity {
             }
 
         }
+
+    public void btnLoadAll(View view){
+        DBHelper db = new DBHelper(this);
+        db.setIsLoad(type,AudioRec.MUST_LOAD);
+    }
+
+    public void btnNotLoadAll(View view){
+        DBHelper db = new DBHelper(this);
+        db.setIsLoad(type,AudioRec.DONT_LOAD);
+    }
 
     }
