@@ -27,7 +27,7 @@ public class DownloadAudioService extends Service {
                 cancel();
             }else{
                 db.loadFirstAudio(null, null);
-                Log.e("SERVICE", "Загрузка "+(loadCnt++)+"/"+cnt);
+                Log.e("SERVICE", "Осталось загрузить: "+cnt);
             }
         }
     }

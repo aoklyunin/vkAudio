@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,6 +71,25 @@ public class AudioRec implements Serializable{
     private SeekBar seek;
     private Activity activity;
 
+    static void createFolder(String path){
+        File folder = new File( path);
+        boolean success = true;
+        if (!folder.exists()) {
+            Log.e("Folders", "Directory Does Not Exist, Create It");
+            success = folder.mkdir();
+        }
+        if (success) {
+            Log.e("Folders", "Directory Created: "+path);
+        } else {
+            Log.e("Folders", "Failed - Error: "+path);
+        }
+    }
+    static void createFolders(){
+        createFolder(saveFolder.substring(1,saveFolder.length()));
+        createFolder(saveFolder+AUDIO_RECOMMEND);
+        createFolder(saveFolder+AUDIO_MY);
+        createFolder(saveFolder+AUDIO_FIND);
+    }
     public String limitStr(String s){
         if(s.length()<=40)
             return s;
@@ -78,14 +99,15 @@ public class AudioRec implements Serializable{
     class AudioDownloader extends AsyncTask<Void, Integer, Integer> {
         ProgressBar bar;
         TextView text;
-        boolean flgText;
+        boolean flgService;
         ProgressDialog barProgressDialog;
         boolean flgPlay;
+        int tryNum;
 
-        AudioDownloader(boolean flgPlay){
+        AudioDownloader(boolean flgPlay, int tryNum){
             savePath = saveFolder+type+"/"+artist + "-" + title + ".mp3";
             savePath = savePath.replaceAll("'","");
-            flgText  = false;
+            flgService  = false;
             this.flgPlay = flgPlay;
             DBHelper db = new DBHelper(activity);
             db.setAudioIsLoadedTR(tableRowID,savePath);
@@ -94,13 +116,13 @@ public class AudioRec implements Serializable{
             btn.setText("Загружено");
             btn.setTextColor(0xFF00FF00);
         }
-        AudioDownloader(ProgressBar bar,TextView text){
+        AudioDownloader(ProgressBar bar,TextView text,int tryNum){
             savePath = saveFolder+type+"/"+artist + "-" + title + ".mp3";
             savePath = savePath.replaceAll("'","");
             this.bar = bar;
             this.text = text;
             flgLoadComplete = false;
-            flgText = true;
+            flgService = true;
         }
         // сам фоновый процесс
         @Override
@@ -113,7 +135,7 @@ public class AudioRec implements Serializable{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            if(flgText){
+            if(flgService){
                 if(text!=null) {
                     // задаём текст полю
                     text.setText("Идёт загрузка..");
@@ -182,7 +204,7 @@ public class AudioRec implements Serializable{
 
         // здесь надо обрабатывать все команды для UI
         protected void onProgressUpdate(Integer... progress) {
-            if (flgText){
+            if (flgService){
                 if (text!=null) {
                     bar.setProgress(progress[0]);
                     text.setText("Идёт загрузка: " + progress[0] + "%");
@@ -196,22 +218,33 @@ public class AudioRec implements Serializable{
         // что нужно сделать в конце процесса
         protected void onPostExecute(Integer param) {
             isLoaded = IS_LOAD;
-            if(flgText) {
-                if (text != null) {
-                    // скрываем progressBar
-                    bar.setVisibility(View.INVISIBLE);
-                    // скрываем текст
-                    text.setVisibility(View.INVISIBLE);
+            if(flgService) {
+                if (new File(savePath).length()>0) {
+                    Log.e("Загрузка Аудио", "Загрузка завершена, попытка номер " + tryNum);
+                    flgLoadComplete = true;
+                }else{
+                    if (tryNum<3)
+                        new AudioDownloader(flgPlay,tryNum++).execute();
+                    else
+                        Log.e("Загрузка Аудио", "После трёх попыток не удалось загрузить аудио");
                 }
             }else{
                 barProgressDialog.dismiss();
-                if(!flgPlay)
-                    Toast.makeText(activity,"Загрузка завершена",Toast.LENGTH_SHORT).show();
-                else{
-                    play();
+                if (new File(savePath).length()>0) {
+                    if (!flgPlay)
+                        Toast.makeText(activity, "Загрузка завершена, попытка номер "+tryNum, Toast.LENGTH_SHORT).show();
+                    else
+                        play();
+                    flgLoadComplete = true;
+                }else{
+                    if (tryNum<3)
+                        new AudioDownloader(flgPlay,tryNum++).execute();
+                    else
+                        Toast.makeText(activity, "После трёх попыток не удалось загрузить аудио", Toast.LENGTH_SHORT).show();
                 }
+
             }
-            flgLoadComplete = true;
+
         }
     }
 
@@ -378,16 +411,16 @@ public class AudioRec implements Serializable{
         return arr;
     }
     String load(ProgressBar bar,TextView text){
-        new AudioDownloader(bar,text).execute();
+        new AudioDownloader(bar,text,0).execute();
         return savePath;
     }
     String loadDialog(){
-        new AudioDownloader(false).execute();
+        new AudioDownloader(false,0).execute();
         return savePath;
     }
     String loadDialogAndPlay(){
         if (isLoaded!=IS_LOAD) {
-            new AudioDownloader(true).execute();
+            new AudioDownloader(true,0).execute();
         }else{
             play();
         }

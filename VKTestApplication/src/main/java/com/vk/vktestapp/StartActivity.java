@@ -35,6 +35,7 @@ public class StartActivity extends FragmentActivity {
         setContentView(R.layout.activity_start);
         // создаём объект ВК клиента
         cVk = new CurVkClient(this);
+        AudioRec.createFolders();
     }
     // функция вывода сообщения
     private void showMessage(String str){

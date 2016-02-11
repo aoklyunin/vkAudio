@@ -19,6 +19,34 @@ public class AudioActivity extends FragmentActivity {
 
     ViewPager pager;
     PagerAdapter pagerAdapter;
+    int curPos;
+
+
+    private void initPager(int pos){
+        pager = (ViewPager) findViewById(R.id.pager);
+
+        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
+
+        pager.setAdapter(pagerAdapter);
+
+        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        pager.setCurrentItem(pos-1);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -53,27 +81,7 @@ public class AudioActivity extends FragmentActivity {
         else
             cnt = cnt/DBHelper.AUDIO_ROW_CNT;
 
-        pager = (ViewPager) findViewById(R.id.pager);
-        pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager());
-
-        pager.setAdapter(pagerAdapter);
-
-        pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+        initPager(0);
     }
 
 
@@ -94,6 +102,7 @@ public class AudioActivity extends FragmentActivity {
 
             @Override
             public Fragment getItem(int position) {
+                curPos = position;
                 return PageFragment.newInstance(position,type);
             }
 
@@ -107,11 +116,13 @@ public class AudioActivity extends FragmentActivity {
     public void btnLoadAll(View view){
         DBHelper db = new DBHelper(this);
         db.setIsLoad(type,AudioRec.MUST_LOAD);
+        initPager(curPos);
     }
 
     public void btnNotLoadAll(View view){
         DBHelper db = new DBHelper(this);
         db.setIsLoad(type,AudioRec.DONT_LOAD);
+        initPager(curPos);
     }
 
     }
