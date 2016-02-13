@@ -23,9 +23,9 @@ import java.util.List;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "VK";
-    public static final String TABLE_CONTACTS = "audioRecTable";
+    public static final String TABLE_AUDIOS = "audioRecTable";
     public static final String KEY_ID = "id";
     public static final String KEY_AUDIO_ID = "audioId";
     public static final String KEY_OWNER_ID = "ownerId";
@@ -38,15 +38,95 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String KEY_TYPE = "type";
     public static final String KEY_PATH_TO_SAVE = "pathToSave";
     public static final String KEY_TABLE_ROW_ID = "tableRowID";
-
-    public static int AUDIO_ROW_CNT = 12;
+    public static final String TABLE_CONFS = "confTable";
+    public static final String KEY_INT_VALUE     = "intValue";
+    public static final String KEY_STRING_VALUE  = "stringValue";
+    public static final String KEY_BOOLEAN_VALUE = "booleanValue";
+    public static final String KEY_NAME = "keyName";
+    public static final int AUDIO_ROW_CNT = 12;
+    
+    public static final String KEY_AUDIO_FIND_CONF = "keyAudioFindConf";
 
     private Activity activity;
     String type;
 
+    public String getStringConf(String key){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CONFS, new String[] {
+                            KEY_ID, KEY_INT_VALUE, KEY_STRING_VALUE,
+                        KEY_BOOLEAN_VALUE, KEY_NAME}, KEY_NAME + "=?",
+                    new String[] { key }, null, null, null, null);
+            if (cursor != null) {
+                try {
+                    cursor.moveToFirst();
+                    String s = cursor.getString(2);
+                    db.close();
+                    return s;
+                }catch (Exception e){
+                    Log.e("DB_GET_VAL",e.getMessage());
+                    db.close();
+                    return "";
+                }
+            }else {
+                Log.e("CONF_TABLE", "Не найдено записи с ключом: "+key);
+                db.close();
+                return "";
+            }
+    }
+    public int getIntConf(String key){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_CONFS, new String[] {
+                        KEY_ID, KEY_INT_VALUE, KEY_STRING_VALUE,
+                        KEY_BOOLEAN_VALUE, KEY_NAME}, KEY_NAME + "=?",
+                new String[] { key }, null, null, null, null);
+        if (cursor != null) {
+            try {
+                cursor.moveToFirst();
+                int i = cursor.getInt(1);
+                db.close();
+                return i;
+            }catch (Exception e){
+                Log.e("DB_GET_VAL", e.getMessage());
+                db.close();
+                return 0;
+            }
+        }else {
+            Log.e("CONF_TABLE","Не найдено записи с ключом: "+key);
+            db.close();
+            return 0;
+        }
+    }
+    public void setStringConf(String name, String val){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(TABLE_CONFS, KEY_NAME + " = ?", new String[]{name});
+        // проверяем, нет ли уже записи с таким же audio_id
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DBHelper.KEY_NAME, name);
+            values.put(DBHelper.KEY_STRING_VALUE, val);
+            db.insert(TABLE_CONFS, null, values);
+        }catch (SQLException e){
+            Log.e("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
+    public void setIntConf(String name, int val){
+        SQLiteDatabase db = this.getReadableDatabase();
+        db.delete(TABLE_CONFS, KEY_NAME + " = ?", new String[]{name});
+        // проверяем, нет ли уже записи с таким же audio_id
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DBHelper.KEY_NAME, name);
+            values.put(DBHelper.KEY_INT_VALUE, val);
+            db.insert(TABLE_CONFS, null, values);
+        }catch (SQLException e){
+            Log.e("SQL DB", e.getMessage());
+        }
+        db.close();
+    }
     public void setIsLoad(String type,int isLoad){
         SQLiteDatabase db = this.getReadableDatabase();
-        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+        String execStr = "UPDATE " + TABLE_AUDIOS + " SET " +
                 KEY_IS_LOADED + " = "+isLoad+" WHERE "+ KEY_IS_LOADED +" <> 2 AND " + KEY_TYPE+" = '"+type+"'";
         Log.e("SQL", "isLoadQuery: " + execStr);
         try {
@@ -59,7 +139,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void deleteAudioByType(String type){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, KEY_TYPE + " = ?", new String[]{type});
+        db.delete(TABLE_AUDIOS, KEY_TYPE + " = ?", new String[]{type});
         db.close();
     }
     // коструктор от контекста
@@ -85,7 +165,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // создание таблицы
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONTACTS + "("
+        String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_AUDIOS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_AUDIO_ID + " INTEGER,"
                 + KEY_OWNER_ID + " INTEGER,"
@@ -99,21 +179,28 @@ public class DBHelper extends SQLiteOpenHelper {
                 + KEY_PATH_TO_SAVE + " TEXT,"
                 + KEY_TABLE_ROW_ID + " INTEGER" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
+        CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_CONFS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_INT_VALUE + " INTEGER,"
+                + KEY_STRING_VALUE + " TEXT,"
+                + KEY_BOOLEAN_VALUE + " BOOLEAN,"
+                + KEY_NAME + " TEXT )";
+        db.execSQL(CREATE_CONTACTS_TABLE);
+
     }
 
     // обновление таблицы
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_AUDIOS);
         onCreate(db);
     }
-
     // добавляем аудиозапись
     public void addAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
         // проверяем, нет ли уже записи с таким же audio_id
         try {
-            String count = "SELECT count(*) FROM "+ TABLE_CONTACTS + " WHERE " + KEY_AUDIO_ID+"="+String.valueOf(audio.getAudioId());
+            String count = "SELECT count(*) FROM "+ TABLE_AUDIOS + " WHERE " + KEY_AUDIO_ID+"="+String.valueOf(audio.getAudioId());
             Cursor mcursor = db.rawQuery(count, null);
             mcursor.moveToFirst();
             int icount = mcursor.getInt(0);
@@ -123,7 +210,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 Log.d("SQL DB", "Записей с заданным кол-во audio_id не найдено");
                 // получаем значения из
                 ContentValues values = audio.getDBValues();
-                db.insert(TABLE_CONTACTS, null, values);
+                db.insert(TABLE_AUDIOS, null, values);
             }
             mcursor.close();
         }catch (SQLException e){
@@ -135,7 +222,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // меняем значение isLoad на противоположное (нужно загружать/не нужно)
     public void inverseIsLoaded(String id){
         SQLiteDatabase db = this.getReadableDatabase();
-        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+        String execStr = "UPDATE " + TABLE_AUDIOS + " SET " +
                 KEY_IS_LOADED + " = (" + KEY_IS_LOADED + "+1) % 2 WHERE id = "+id;
         Log.d("SQL DB",execStr);
         try {
@@ -148,7 +235,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public AudioRec getAudioRecById(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_CONTACTS, new String[] {
+        Cursor cursor = db.query(TABLE_AUDIOS, new String[] {
                         KEY_ID, KEY_AUDIO_ID, KEY_OWNER_ID,
                         KEY_ARTIST, KEY_TITLE, KEY_DURATION,
                         KEY_URL, KEY_GENRE_ID, KEY_IS_LOADED,
@@ -163,7 +250,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<AudioRec> getAllAudioRecs() {
         List<AudioRec> audioList = new ArrayList<AudioRec>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS;
+        String selectQuery = "SELECT  * FROM " + TABLE_AUDIOS;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -180,7 +267,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<AudioRec> getAudio(String type) {
         List<AudioRec> audioList = new ArrayList<AudioRec>();
-        String selectQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
+        String selectQuery = "SELECT  * FROM " + TABLE_AUDIOS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -225,25 +312,28 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(KEY_ARTIST, audio.getArtist());
         values.put(KEY_TITLE, audio.getTitle());
 
-        return db.update(TABLE_CONTACTS, values, KEY_ID + " = ?",
+        return db.update(TABLE_AUDIOS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(audio.getID()) });
     }
 
     public void deleteAudioRec(AudioRec audio) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, KEY_ID + " = ?", new String[]{String.valueOf(audio.getID())});
+        db.delete(TABLE_AUDIOS, KEY_ID + " = ?", new String[]{String.valueOf(audio.getID())});
         db.close();
     }
 
     public void deleteAll() {
+        // удаляем аудиозаписи
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_CONTACTS, null, null);
+        db.delete(TABLE_AUDIOS, null, null);
+        // удаляем параметр предыдущего поиска
+        db.delete(TABLE_CONFS, KEY_NAME + " = ?", new String[]{KEY_AUDIO_FIND_CONF});
         db.close();
         Toast.makeText(activity,"Аудиозаписи удалены",Toast.LENGTH_SHORT).show();
     }
 
     public int getAudioCount(String type) {
-        String countQuery = "SELECT  * FROM " + TABLE_CONTACTS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
+        String countQuery = "SELECT  * FROM " + TABLE_AUDIOS+ " WHERE " + KEY_TYPE + " = '"+type+"'";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int cnt = cursor.getCount();
@@ -254,7 +344,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public int getCountMustLoad(){
         SQLiteDatabase db = this.getWritableDatabase();
-        String count = "SELECT count(*) FROM "+ TABLE_CONTACTS + " WHERE " + KEY_IS_LOADED+"="+AudioRec.MUST_LOAD;
+        String count = "SELECT count(*) FROM "+ TABLE_AUDIOS + " WHERE " + KEY_IS_LOADED+"="+AudioRec.MUST_LOAD;
         Cursor mcursor = db.rawQuery(count, null);
         mcursor.moveToFirst();
         int cnt = mcursor.getInt(0);
@@ -266,7 +356,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public AudioRec getAudioByTableRowID(int id){
         Log.e("DB_TYPE",type);
-        String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
+        String selectQuery = "SELECT * FROM " + TABLE_AUDIOS+
                 " WHERE "+ KEY_TABLE_ROW_ID+"="+id+" AND "+KEY_TYPE+"='"+type+"'";
         SQLiteDatabase db = this.getWritableDatabase();
         AudioRec audio = null;
@@ -281,7 +371,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public AudioRec getFirstAudioToLoad(){
-        String selectQuery = "SELECT * FROM " + TABLE_CONTACTS+
+        String selectQuery = "SELECT * FROM " + TABLE_AUDIOS+
                              " WHERE "+ KEY_IS_LOADED+"="+AudioRec.MUST_LOAD+
                              " LIMIT 1";
         Log.e("SQL","queyLoad: "+selectQuery);
@@ -299,7 +389,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     void setAudioIsLoaded(int audioId,String savePath){
         SQLiteDatabase db = this.getReadableDatabase();
-        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+        String execStr = "UPDATE " + TABLE_AUDIOS + " SET " +
                 KEY_IS_LOADED + " = 2, "+ KEY_PATH_TO_SAVE+" = '"+savePath+"' WHERE "+ KEY_AUDIO_ID +" = "+audioId;
         Log.e("SQL", "isLoadQuery: " + execStr);
         try {
@@ -311,7 +401,7 @@ public class DBHelper extends SQLiteOpenHelper {
     }
     void setAudioIsLoadedTR(int rowId,String savePath){
         SQLiteDatabase db = this.getReadableDatabase();
-        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+        String execStr = "UPDATE " + TABLE_AUDIOS + " SET " +
                 KEY_IS_LOADED + " = 2, "+ KEY_PATH_TO_SAVE+" = '"+savePath+"' WHERE "+ KEY_TABLE_ROW_ID +" = "+rowId;
         Log.e("SQL", "isLoadQuery: " + execStr);
         try {
@@ -335,7 +425,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void setTableRowId(int rowId,int id){
         SQLiteDatabase db = this.getReadableDatabase();
-        String execStr = "UPDATE " + TABLE_CONTACTS + " SET " +
+        String execStr = "UPDATE " + TABLE_AUDIOS + " SET " +
                 KEY_TABLE_ROW_ID + " = " + rowId + " WHERE "+ KEY_ID +" = "+id;
         Log.d("SQL DB",execStr);
         try {

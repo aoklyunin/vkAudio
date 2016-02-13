@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,7 +52,9 @@ public class CurVkClient {
 
 
     void findAudios(int cnt,String query){
+
         DBHelper db = new DBHelper(mainActivity);
+        db.setStringConf(DBHelper.KEY_AUDIO_FIND_CONF,query);
         db.deleteAudioByType(AudioRec.AUDIO_FIND);
         // запрос на мои аудиозаписи
         VKParameters params = new VKParameters();
@@ -91,7 +94,7 @@ public class CurVkClient {
         // задаём текст диалога
         dialogBuilder.setMessage("Введите параметры поиска");
         // кнопка положительного ответа
-        dialogBuilder.setPositiveButton("Загрузить", new DialogInterface.OnClickListener() {
+        dialogBuilder.setPositiveButton("Поиск", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 findAudios(Integer.parseInt(findCount.getText().toString()),
                         findText.getText().toString());
@@ -107,6 +110,36 @@ public class CurVkClient {
         b.show();
 
     }
+
+    void alertFindAudioChooseDialog(){
+        // подготавливаем диалог диалог
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(mainActivity);
+        LayoutInflater inflater = mainActivity.getLayoutInflater();
+        // задаём заголовок диалога
+        dialogBuilder.setTitle("Поиск");
+        // задаём текст диалога
+        DBHelper db = new DBHelper(mainActivity);
+        dialogBuilder.setMessage("Последний запрос был: "+db.getStringConf(DBHelper.KEY_AUDIO_FIND_CONF)+". Что сделать?");
+        // кнопка положительного ответа
+        dialogBuilder.setPositiveButton("Последний поиск", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Intent intent = new Intent(mainActivity, AudioActivity.class);
+                intent.putExtra("type", AudioRec.AUDIO_FIND);
+                mainActivity.startActivity(intent);
+            }
+        });
+        // кнопка отрицательного ответа
+        dialogBuilder.setNegativeButton("Новый поиск", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                alertFindAudioDialog();
+            }
+        });
+        // создаём диалог и показываем его
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+
+    }
+
     // загрузка аудио
     public void loadAudio(int audioMyCnt,int audioRecCnt){
         if (audioMyCnt!=0 && audioRecCnt!=0) {
